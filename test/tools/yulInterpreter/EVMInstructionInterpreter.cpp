@@ -375,6 +375,7 @@ u256 EVMInstructionInterpreter::eval(
 		break;
 	// --------------- invalid in strict assembly ---------------
 	case Instruction::YIELD:
+	case Instruction::SPAWN:
 	case Instruction::JUMP:
 	case Instruction::JUMPI:
 	case Instruction::JUMPDEST:

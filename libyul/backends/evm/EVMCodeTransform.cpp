@@ -233,11 +233,33 @@ void CodeTransform::operator()(FunctionCall const& _call)
 	m_assembly.setSourceLocation(originLocationOf(_call));
 	if (BuiltinFunctionForEVM const* builtin = m_dialect.builtin(_call.functionName.name))
 	{
-		for (auto&& [i, arg]: _call.arguments | ranges::views::enumerate | ranges::views::reverse)
-			if (!builtin->literalArgument(i))
-				visitExpression(arg);
-		m_assembly.setSourceLocation(originLocationOf(_call));
-		builtin->generateCode(_call, m_assembly, m_builtinContext);
+		if(_call.functionName.name.str() == "spawn") { // TODO: Change this to builtin generate code?
+		  m_assembly.appendLabelReference(*m_currentEndJumper);
+
+		  Scope::Function* function = nullptr;
+          yulAssert(m_scope->lookup(get<FunctionCall>(_call.arguments[0]).functionName.name, GenericVisitor{
+              [](Scope::Variable&) { yulAssert(false, "Expected function name."); },
+              [&](Scope::Function& _function) { function = &_function; }
+          }), "Function name not found.");
+		  for (auto const& arg: get<FunctionCall>(_call.arguments[0]).arguments | ranges::views::reverse)
+			  visitExpression(arg);
+
+		  m_assembly.setSourceLocation(originLocationOf(get<FunctionCall>(_call.arguments[0])));
+		  m_assembly.appendLabelReference(functionEntryID(*function));
+		  m_assembly.appendInstruction(evmasm::Instruction::SPAWN);
+
+		  for (auto const& arg: get<FunctionCall>(_call.arguments[0]).arguments | ranges::views::reverse) {
+			  m_assembly.appendInstruction(evmasm::Instruction::POP);
+		  }
+
+		  m_assembly.appendInstruction(evmasm::Instruction::POP);
+		} else {
+		  for (auto&& [i, arg]: _call.arguments | ranges::views::enumerate | ranges::views::reverse)
+		  	if (!builtin->literalArgument(i))
+		  		visitExpression(arg);
+		  m_assembly.setSourceLocation(originLocationOf(_call));
+		  builtin->generateCode(_call, m_assembly, m_builtinContext);
+		}
 	}
 	else
 	{
@@ -395,6 +417,7 @@ void CodeTransform::operator()(FunctionDefinition const& _function)
 		m_assembly.newLabelId()
 	);
 	subTransform.m_scope = virtualFunctionScope;
+	subTransform.m_currentEndJumper = m_currentEndJumper;
 
 	if (m_allowStackOpt)
 		// Immediately delete entirely unused parameters.

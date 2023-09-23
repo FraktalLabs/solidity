@@ -420,7 +420,20 @@ vector<YulString> AsmAnalyzer::operator()(FunctionCall const& _funCall)
 				continue;
 			}
 		}
-		argTypes.emplace_back(expectExpression(arg));
+
+		if (_funCall.functionName.name.str() == "spawn") {
+			// TODO: Check if arg is a function
+
+			// Inner Args
+			vector<YulString> innerArgTypes;
+			for (auto const& innerArg : get<FunctionCall>(arg).arguments) {
+				innerArgTypes.emplace_back(expectExpression(innerArg));
+			}
+
+			argTypes.emplace_back("spawn_function"_yulstring); //TODO: what to use for yulstring
+		} else {
+			argTypes.emplace_back(expectExpression(arg));
+		}
 	}
 	std::reverse(argTypes.begin(), argTypes.end());
 

@@ -184,6 +184,8 @@ enum class Instruction: uint8_t
 	CREATE2 = 0xf5,		///< create new account with associated code at address `sha3(0xff + sender + salt + init code) % 2**160`
 	STATICCALL = 0xfa,	///< like CALL but disallow state modifications
 
+	SPAWN = 0xfb,		///< add coroutine to queue based on attached function call
+	YIELD = 0xfc,       ///< yield execution to next coroutine in queue ( adds current coroutine to back of queue )
 	REVERT = 0xfd,		///< halt execution, revert state and return output data
 	INVALID = 0xfe,		///< invalid instruction for expressing runtime errors (e.g., division-by-zero)
 	SELFDESTRUCT = 0xff	///< halt execution and register account for later deletion

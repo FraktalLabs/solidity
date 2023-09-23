@@ -58,7 +58,12 @@ void CodeGenerator::assemble(
 			CodeTransform::UseNamedLabels::YesAndForceUnique :
 			CodeTransform::UseNamedLabels::Never
 	);
+
+	AbstractAssembly::LabelID endLabel = assemblyAdapter.newLabelId();
+	transform.m_currentEndJumper = &endLabel;
 	transform(_parsedData);
+	//TODO: Only if # of end jumpers > 0
+	assemblyAdapter.appendLabel(endLabel);
 	if (!transform.stackErrors().empty())
 		assertThrow(
 			false,

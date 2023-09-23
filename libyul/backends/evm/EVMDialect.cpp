@@ -56,6 +56,7 @@ pair<YulString, BuiltinFunctionForEVM> createEVMFunction(
 	BuiltinFunctionForEVM f;
 	f.name = YulString{_name};
 	f.parameters.resize(static_cast<size_t>(info.args));
+	if (_name == "spawn") { f.parameters[0] = "spawn_function"_yulstring; }
 	f.returns.resize(static_cast<size_t>(info.ret));
 	f.sideEffects = EVMDialect::sideEffectsOfInstruction(_instruction);
 	if (evmasm::SemanticInformation::terminatesControlFlow(_instruction))

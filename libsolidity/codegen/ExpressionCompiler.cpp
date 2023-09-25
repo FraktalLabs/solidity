@@ -820,6 +820,10 @@ bool ExpressionCompiler::visit(FunctionCall const& _functionCall)
 			acceptAndConvert(*arguments.front(), *function.parameterTypes().front(), true);
 			m_context << Instruction::SELFDESTRUCT;
 			break;
+		case FunctionType::Kind::Yield:
+			// TODO: asserts and checks and things
+			m_context << Instruction::YIELD;
+			break;
 		case FunctionType::Kind::Revert:
 		{
 			if (arguments.empty())

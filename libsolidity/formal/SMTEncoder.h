@@ -213,6 +213,7 @@ protected:
 	void visitABIFunction(FunctionCall const& _funCall);
 	void visitCryptoFunction(FunctionCall const& _funCall);
 	void visitGasLeft(FunctionCall const& _funCall);
+	void visitYield(FunctionCall const& _funCall);
 	virtual void visitAddMulMod(FunctionCall const& _funCall);
 	void visitWrapUnwrap(FunctionCall const& _funCall);
 	void visitObjectCreation(FunctionCall const& _funCall);

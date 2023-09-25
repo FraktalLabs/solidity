@@ -636,6 +636,9 @@ void SMTEncoder::endVisit(FunctionCall const& _funCall)
 	case FunctionType::Kind::GasLeft:
 		visitGasLeft(_funCall);
 		break;
+	case FunctionType::Kind::Yield:
+		visitYield(_funCall);
+		break;
 	case FunctionType::Kind::External:
 		if (isPublicGetter(_funCall.expression()))
 			visitPublicGetter(_funCall);
@@ -854,6 +857,14 @@ void SMTEncoder::visitGasLeft(FunctionCall const& _funCall)
 	m_context.setUnknownValue(*symbolicVar);
 	if (index > 0)
 		m_context.addAssertion(symbolicVar->currentValue() <= symbolicVar->valueAtIndex(index - 1));
+}
+
+void SMTEncoder::visitYield(FunctionCall const& _funCall)
+{
+	//TODO
+	auto const& funType = dynamic_cast<FunctionType const&>(*_funCall.expression().annotation().type);
+    auto kind = funType.kind();
+	solAssert(kind == FunctionType::Kind::Yield, "");
 }
 
 void SMTEncoder::visitAddMulMod(FunctionCall const& _funCall)

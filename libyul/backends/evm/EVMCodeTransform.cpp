@@ -248,9 +248,8 @@ void CodeTransform::operator()(FunctionCall const& _call)
 		  m_assembly.appendLabelReference(functionEntryID(*function));
 		  m_assembly.appendInstruction(evmasm::Instruction::SPAWN);
 
-		  for (auto const& arg: get<FunctionCall>(_call.arguments[0]).arguments | ranges::views::reverse) {
+		  for ([[maybe_unused]] auto const& _: get<FunctionCall>(_call.arguments[0]).arguments | ranges::views::reverse)
 			  m_assembly.appendInstruction(evmasm::Instruction::POP);
-		  }
 
 		  m_assembly.appendInstruction(evmasm::Instruction::POP);
 		} else {

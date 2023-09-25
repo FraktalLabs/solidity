@@ -1115,6 +1115,12 @@ void IRGeneratorForStatements::endVisit(FunctionCall const& _functionCall)
 
 		break;
 	}
+	case FunctionType::Kind::Yield:
+	{
+		// TODO: sol asserts
+		appendCode() << "yield()\n";
+		break;
+	}
 	case FunctionType::Kind::ABIEncode:
 	case FunctionType::Kind::ABIEncodePacked:
 	case FunctionType::Kind::ABIEncodeWithSelector:

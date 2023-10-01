@@ -85,6 +85,16 @@ void PostTypeChecker::endVisit(EmitStatement const& _emit)
 	callEndVisit(_emit);
 }
 
+bool PostTypeChecker::visit(SpawnStatement const& _spawn)
+{
+	return callVisit(_spawn);
+}
+
+void PostTypeChecker::endVisit(SpawnStatement const& _spawn)
+{
+	callEndVisit(_spawn);
+}
+
 bool PostTypeChecker::visit(RevertStatement const& _revert)
 {
 	return callVisit(_revert);
@@ -302,6 +312,17 @@ struct EventOutsideEmitErrorOutsideRevertChecker: public PostTypeChecker::Checke
 	}
 
 	void endVisit(EmitStatement const&) override
+	{
+		m_currentStatement = nullptr;
+	}
+
+	bool visit(SpawnStatement const& _spawnStatement) override
+	{
+		m_currentStatement = &_spawnStatement;
+		return true;
+	}
+
+	void endVisit(SpawnStatement const&) override
 	{
 		m_currentStatement = nullptr;
 	}

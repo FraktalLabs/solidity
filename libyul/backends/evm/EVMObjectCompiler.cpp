@@ -121,10 +121,7 @@ void EVMObjectCompiler::run(Object& _object, bool _optimize)
 			{},
 			CodeTransform::UseNamedLabels::ForFirstFunctionOfEachName
 		};
-		AbstractAssembly::LabelID endLabel = m_assembly.newLabelId();
-        transform.m_currentEndJumper = &endLabel;
 		transform(*_object.code);
-		m_assembly.appendLabel(endLabel);
 		if (!transform.stackErrors().empty())
 			BOOST_THROW_EXCEPTION(transform.stackErrors().front());
 	}

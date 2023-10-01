@@ -219,10 +219,6 @@ private:
 	std::optional<int> m_functionExitStackHeight;
 
 	std::vector<StackTooDeepError> m_stackErrors;
-
-public:
-	size_t endJumpers = 0;
-	AbstractAssembly::LabelID* m_currentEndJumper = nullptr;
 };
 
 }

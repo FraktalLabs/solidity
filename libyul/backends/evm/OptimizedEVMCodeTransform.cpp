@@ -66,6 +66,7 @@ vector<StackTooDeepError> OptimizedEVMCodeTransform::run(
 	return std::move(optimizedCodeTransform.m_stackErrors);
 }
 
+//TODO: Spawn and yield optimizations.
 void OptimizedEVMCodeTransform::operator()(CFG::FunctionCall const& _call)
 {
 	// Validate stack.

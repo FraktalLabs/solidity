@@ -113,6 +113,7 @@ private:
 	ASTPointer<Return> createReturn(Json::Value const& _node);
 	ASTPointer<Throw> createThrow(Json::Value const& _node);
 	ASTPointer<EmitStatement> createEmitStatement(Json::Value const& _node);
+	ASTPointer<SpawnStatement> createSpawnStatement(Json::Value const& _node);
 	ASTPointer<RevertStatement> createRevertStatement(Json::Value const& _node);
 	ASTPointer<VariableDeclarationStatement> createVariableDeclarationStatement(Json::Value const& _node);
 	ASTPointer<ExpressionStatement> createExpressionStatement(Json::Value const& _node);
@@ -122,6 +123,7 @@ private:
 	ASTPointer<UnaryOperation> createUnaryOperation(Json::Value const& _node);
 	ASTPointer<BinaryOperation> createBinaryOperation(Json::Value const& _node);
 	ASTPointer<FunctionCall> createFunctionCall(Json::Value const& _node);
+	ASTPointer<SpawnCall> createSpawnCall(Json::Value const& _node);
 	ASTPointer<FunctionCallOptions> createFunctionCallOptions(Json::Value const& _node);
 	ASTPointer<NewExpression> createNewExpression(Json::Value const& _node);
 	ASTPointer<MemberAccess> createMemberAccess(Json::Value const& _node);

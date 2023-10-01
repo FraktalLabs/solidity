@@ -1321,6 +1321,15 @@ bool ContractCompiler::visit(EmitStatement const& _emit)
 	return false;
 }
 
+bool ContractCompiler::visit(SpawnStatement const& _spawn)
+{
+	CompilerContext::LocationSetter locationSetter(m_context, _spawn);
+	StackHeightChecker checker(m_context);
+	compileExpression(_spawn.spawnCall());
+	checker.check();
+	return false;
+}
+
 bool ContractCompiler::visit(RevertStatement const& _revert)
 {
 	CompilerContext::LocationSetter locationSetter(m_context, _revert);

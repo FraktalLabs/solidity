@@ -69,6 +69,15 @@ void VariableUsage::endVisit(FunctionCall const& _funCall)
 				funDef->accept(*this);
 }
 
+//void VariableUsage::endVisit(SpawnCall const& _spawnCall)
+//{
+//	auto scopeContract = currentScopeContract();
+//	if (m_inlineFunctionCalls(_spawnCall, scopeContract, m_currentContract))
+//		if (auto funDef = SMTEncoder::functionCallToDefinition(_spawnCall, scopeContract, m_currentContract))
+//			if (find(m_callStack.begin(), m_callStack.end(), funDef) == m_callStack.end())
+//				funDef->accept(*this);
+//}
+
 bool VariableUsage::visit(FunctionDefinition const& _function)
 {
 	m_callStack.push_back(&_function);

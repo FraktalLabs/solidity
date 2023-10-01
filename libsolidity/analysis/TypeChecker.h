@@ -146,6 +146,8 @@ private:
 	bool visit(ForStatement const& _forStatement) override;
 	void endVisit(Return const& _return) override;
 	void endVisit(EmitStatement const& _emit) override;
+	bool visit(SpawnCall const& _spawn) override;
+	void endVisit(SpawnStatement const& _spawn) override;
 	void endVisit(RevertStatement const& _revert) override;
 	bool visit(VariableDeclarationStatement const& _variable) override;
 	void endVisit(ExpressionStatement const& _statement) override;

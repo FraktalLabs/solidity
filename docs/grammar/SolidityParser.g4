@@ -469,6 +469,10 @@ returnStatement: Return expression? Semicolon;
  */
 emitStatement: Emit expression callArgumentList Semicolon;
 /**
+ * A spawn statement. The contained expression needs to refer to a func.
+ */
+spawnStatement: Spawn expression callArgumentList Semicolon;
+/**
  * A revert statement. The contained expression needs to refer to an error.
  */
 revertStatement: Revert expression callArgumentList Semicolon;

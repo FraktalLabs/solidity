@@ -70,6 +70,7 @@ Declaration const* ASTNode::referencedDeclaration(Expression const& _expression)
 		return nullptr;
 }
 
+//TODO?
 FunctionDefinition const* ASTNode::resolveFunctionCall(FunctionCall const& _functionCall, ContractDefinition const* _mostDerivedContract)
 {
 	auto const* functionDef = dynamic_cast<FunctionDefinition const*>(
@@ -905,6 +906,7 @@ FunctionCallAnnotation& FunctionCall::annotation() const
 	return initAnnotation<FunctionCallAnnotation>();
 }
 
+//TODO?
 vector<ASTPointer<Expression const>> FunctionCall::sortedArguments() const
 {
 	// normal arguments

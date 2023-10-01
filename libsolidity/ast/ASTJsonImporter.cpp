@@ -217,6 +217,8 @@ ASTPointer<ASTNode> ASTJsonImporter::convertJsonToASTNode(Json::Value const& _js
 		return createReturn(_json);
 	if (nodeType == "EmitStatement")
 		return createEmitStatement(_json);
+	if (nodeType == "SpawnStatement")
+		return createSpawnStatement(_json);
 	if (nodeType == "RevertStatement")
 		return createRevertStatement(_json);
 	if (nodeType == "Throw")
@@ -239,6 +241,8 @@ ASTPointer<ASTNode> ASTJsonImporter::convertJsonToASTNode(Json::Value const& _js
 		return createFunctionCall(_json);
 	if (nodeType == "FunctionCallOptions")
 		return createFunctionCallOptions(_json);
+	if (nodeType == "SpawnCall")
+		return createSpawnCall(_json);
 	if (nodeType == "NewExpression")
 		return createNewExpression(_json);
 	if (nodeType == "MemberAccess")
@@ -831,6 +835,15 @@ ASTPointer<EmitStatement> ASTJsonImporter::createEmitStatement(Json::Value const
 	);
 }
 
+ASTPointer<SpawnStatement> ASTJsonImporter::createSpawnStatement(Json::Value const&  _node)
+{
+	return createASTNode<SpawnStatement>(
+		_node,
+		nullOrASTString(_node, "documentation"),
+		createSpawnCall(member(_node, "spawnCall"))
+	);
+}
+
 ASTPointer<RevertStatement> ASTJsonImporter::createRevertStatement(Json::Value const&  _node)
 {
 	return createASTNode<RevertStatement>(
@@ -929,6 +942,31 @@ ASTPointer<FunctionCall> ASTJsonImporter::createFunctionCall(Json::Value const& 
 	optional<vector<SourceLocation>> sourceLocations = createSourceLocations(_node);
 
 	return createASTNode<FunctionCall>(
+		_node,
+		convertJsonToASTNode<Expression>(member(_node, "expression")),
+		arguments,
+		names,
+		sourceLocations ?
+			*sourceLocations :
+			vector<SourceLocation>(names.size())
+	);
+}
+
+ASTPointer<SpawnCall> ASTJsonImporter::createSpawnCall(Json::Value const&  _node)
+{
+	std::vector<ASTPointer<Expression>> arguments;
+	for (auto& arg: member(_node, "arguments"))
+		arguments.push_back(convertJsonToASTNode<Expression>(arg));
+	std::vector<ASTPointer<ASTString>> names;
+	for (auto& name: member(_node, "names"))
+	{
+		astAssert(name.isString(), "Expected 'names' members to be strings!");
+		names.push_back(make_shared<ASTString>(name.asString()));
+	}
+
+	optional<vector<SourceLocation>> sourceLocations = createSourceLocations(_node);
+
+	return createASTNode<SpawnCall>(
 		_node,
 		convertJsonToASTNode<Expression>(member(_node, "expression")),
 		arguments,

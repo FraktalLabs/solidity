@@ -70,6 +70,7 @@ private:
 
 	bool visit(FunctionCall const& _functionCall) override;
 	bool visit(EmitStatement const& _emitStatement) override;
+	bool visit(SpawnStatement const& _spawnStatement) override;
 	bool visit(Identifier const& _identifier) override;
 	bool visit(MemberAccess const& _memberAccess) override;
 	bool visit(ModifierInvocation const& _modifierInvocation) override;

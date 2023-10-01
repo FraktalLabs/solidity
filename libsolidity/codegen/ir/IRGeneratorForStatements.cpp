@@ -883,6 +883,58 @@ bool IRGeneratorForStatements::visit(BinaryOperation const& _binOp)
 	return false;
 }
 
+void IRGeneratorForStatements::endVisit(SpawnCall const& _spawnCall)
+{
+	setLocation(_spawnCall);
+//	auto functionCallKind = *_spawnCall.annotation().kind;
+
+//	solAssert(functionCallKind == FunctionCallKind::SpawnCall, "Expected SpawnCall");
+
+	FunctionTypePointer functionType = nullptr;
+	functionType = dynamic_cast<FunctionType const*>(_spawnCall.expression().annotation().type);
+
+	TypePointers parameterTypes = functionType->parameterTypes();
+	vector<ASTPointer<Expression const>> const& arguments = _spawnCall.sortedArguments();
+
+	FunctionDefinition const* functionDef = ASTNode::resolveFunctionCall(_spawnCall, &m_context.mostDerivedContract());
+
+    solAssert(!functionType->takesArbitraryParameters());
+
+    vector<string> args;
+	if (functionType->hasBoundFirstArgument()) {
+        args += IRVariable(_spawnCall.expression()).part("self").stackSlots();
+	}
+
+	for (size_t i = 0; i < arguments.size(); ++i) {
+        args += convert(*arguments[i], *parameterTypes[i]).stackSlots();
+	}
+
+    if (functionDef)
+    {
+        solAssert(functionDef->isImplemented());
+
+        define(_spawnCall) <<
+            "spawn(" <<
+            m_context.enqueueFunctionForCodeGeneration(*functionDef) <<
+            "(" <<
+            joinHumanReadable(args) <<
+            "))\n";
+    }
+    else
+    {
+        YulArity arity = YulArity::fromType(*functionType);
+        m_context.internalFunctionCalledThroughDispatch(arity);
+
+        define(_spawnCall) <<
+            "spawn(" <<
+            IRNames::internalDispatch(arity) <<
+            "(" <<
+            IRVariable(_spawnCall.expression()).part("functionIdentifier").name() <<
+            joinHumanReadable(args) <<
+            "))\n";
+    }
+}
+
 void IRGeneratorForStatements::endVisit(FunctionCall const& _functionCall)
 {
 	setLocation(_functionCall);

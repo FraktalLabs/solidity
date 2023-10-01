@@ -83,6 +83,9 @@ private:
 	bool visit(EmitStatement const& _emit) override;
 	void endVisit(EmitStatement const& _emit) override;
 
+	bool visit(SpawnStatement const& _spawn) override;
+	void endVisit(SpawnStatement const& _spawn) override;
+
 	bool visit(RevertStatement const& _revert) override;
 	void endVisit(RevertStatement const& _revert) override;
 

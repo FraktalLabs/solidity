@@ -121,6 +121,7 @@ public:
 	bool visit(UnaryOperation const& _unaryOperation) override;
 	bool visit(BinaryOperation const& _binOp) override;
 	void endVisit(FunctionCall const& _funCall) override;
+	void endVisit(SpawnCall const& _spawnCall) override;
 	void endVisit(FunctionCallOptions const& _funCallOptions) override;
 	bool visit(MemberAccess const& _memberAccess) override;
 	void endVisit(MemberAccess const& _memberAccess) override;

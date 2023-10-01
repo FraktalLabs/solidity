@@ -1880,6 +1880,27 @@ private:
 };
 
 /**
+ * The spawn statement is used to add a coroutine to the queue: spawn FuncName(arg1, ..., argn)
+ */
+class SpawnStatement: public Statement
+{
+public:
+	explicit SpawnStatement(
+		int64_t _id,
+		SourceLocation const& _location,
+		ASTPointer<ASTString> const& _docString,
+		ASTPointer<SpawnCall> _functionCall
+	):
+		Statement(_id, _location, _docString), m_spawnCall(std::move(_functionCall)) {}
+	void accept(ASTVisitor& _visitor) override;
+	void accept(ASTConstVisitor& _visitor) const override;
+
+	SpawnCall const& spawnCall() const { return *m_spawnCall; }
+private:
+	ASTPointer<SpawnCall> m_spawnCall;
+};
+
+/**
  * Definition of one or more variables as a statement inside a function.
  * If multiple variables are declared, a value has to be assigned directly.
  * If only a single variable is declared, the value can be missing.
@@ -2147,11 +2168,30 @@ public:
 
 	FunctionCallAnnotation& annotation() const override;
 
-private:
+protected:
 	ASTPointer<Expression> m_expression;
 	std::vector<ASTPointer<Expression>> m_arguments;
 	std::vector<ASTPointer<ASTString>> m_names;
 	std::vector<SourceLocation> m_nameLocations;
+};
+
+class SpawnCall: public FunctionCall
+{
+public:
+    SpawnCall(
+        int64_t _id,
+        SourceLocation const& _location,
+        ASTPointer<Expression> _expression,
+        std::vector<ASTPointer<Expression>> _arguments,
+        std::vector<ASTPointer<ASTString>> _names,
+        std::vector<SourceLocation> _nameLocations
+    ):
+		FunctionCall(_id, _location, std::move(_expression), std::move(_arguments), std::move(_names), std::move(_nameLocations))
+    {
+    }
+
+	void accept(ASTVisitor& _visitor) override;
+	void accept(ASTConstVisitor& _visitor) const override;
 };
 
 /**

@@ -181,6 +181,7 @@ namespace solidity::langutil
 	K(Receive, "receive", 0)                                           \
 	K(Return, "return", 0)                                             \
 	K(Returns, "returns", 0)                                           \
+	K(Spawn, "spawn", 0)                                               \
 	K(Storage, "storage", 0)                                           \
 	K(CallData, "calldata", 0)                                         \
 	K(Struct, "struct", 0)                                             \

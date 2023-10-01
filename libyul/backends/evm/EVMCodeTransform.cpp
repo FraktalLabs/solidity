@@ -230,11 +230,35 @@ void CodeTransform::operator()(FunctionCall const& _call)
 {
 	yulAssert(m_scope, "");
 
+/*
+ * Old
+ * PUSH EOP POINTER
+ * PUSH ARGS
+ * PUSH FUNCTION POINTER
+ * SPAWN
+ * POP ARGS
+ * POP EOP POINTER
+ *
+ * New
+ * PUSH STOP DEST
+ * PUSH ARGS
+ * PUSH FUNCTION POINTER
+ * SPAWN
+ * POP ARGS
+ * POP STOP DEST
+ * PUSH POST STOP DEST
+ * JUMP
+ * JUMPDEST ( from func after spawn )
+ * STOP
+ * JUMPDEST ( from spawn on 1st run )
+ */
+
 	m_assembly.setSourceLocation(originLocationOf(_call));
 	if (BuiltinFunctionForEVM const* builtin = m_dialect.builtin(_call.functionName.name))
 	{
 		if(_call.functionName.name.str() == "spawn") { // TODO: Change this to builtin generate code?
-		  m_assembly.appendLabelReference(*m_currentEndJumper);
+		  AbstractAssembly::LabelID stopLabel = m_assembly.newLabelId();
+		  m_assembly.appendLabelReference(stopLabel);
 
 		  Scope::Function* function = nullptr;
           yulAssert(m_scope->lookup(get<FunctionCall>(_call.arguments[0]).functionName.name, GenericVisitor{
@@ -252,6 +276,14 @@ void CodeTransform::operator()(FunctionCall const& _call)
 			  m_assembly.appendInstruction(evmasm::Instruction::POP);
 
 		  m_assembly.appendInstruction(evmasm::Instruction::POP);
+
+		  AbstractAssembly::LabelID postStopLabel = m_assembly.newLabelId();
+		  m_assembly.appendLabelReference(postStopLabel);
+		  m_assembly.appendInstruction(evmasm::Instruction::JUMP);
+
+		  m_assembly.appendLabel(stopLabel);
+		  m_assembly.appendInstruction(evmasm::Instruction::STOP);
+		  m_assembly.appendLabel(postStopLabel);
 		} else {
 		  for (auto&& [i, arg]: _call.arguments | ranges::views::enumerate | ranges::views::reverse)
 		  	if (!builtin->literalArgument(i))
@@ -416,7 +448,6 @@ void CodeTransform::operator()(FunctionDefinition const& _function)
 		m_assembly.newLabelId()
 	);
 	subTransform.m_scope = virtualFunctionScope;
-	subTransform.m_currentEndJumper = m_currentEndJumper;
 
 	if (m_allowStackOpt)
 		// Immediately delete entirely unused parameters.

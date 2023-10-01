@@ -1324,6 +1324,9 @@ ASTPointer<Statement> Parser::parseStatement(bool _allowUnchecked)
 		case Token::Emit:
 			statement = parseEmitStatement(docString);
 			break;
+		case Token::Spawn:
+			statement = parseSpawnStatement(docString);
+			break;
 		case Token::Identifier:
 			if (m_scanner->currentLiteral() == "revert" && m_scanner->peekNextToken() == Token::Identifier)
 				statement = parseRevertStatement(docString);
@@ -1570,6 +1573,43 @@ ASTPointer<EmitStatement> Parser::parseEmitStatement(ASTPointer<ASTString> const
 		functionCallArguments.parameterNameLocations
 	);
 	return nodeFactory.createNode<EmitStatement>(_docString, eventCall);
+}
+
+ASTPointer<SpawnStatement> Parser::parseSpawnStatement(ASTPointer<ASTString> const& _docString)
+{
+	expectToken(Token::Spawn, false);
+
+	ASTNodeFactory nodeFactory(*this);
+	advance();
+	ASTNodeFactory spawnCallNodeFactory(*this);
+
+	if (m_scanner->currentToken() != Token::Identifier)
+		fatalParserError(5620_error, "Expected contract name or path.");
+
+	IndexAccessedPath iap;
+	while (true)
+	{
+		iap.path.push_back(parseIdentifier());
+		if (m_scanner->currentToken() != Token::Period)
+			break;
+		advance();
+	}
+
+	auto contractName = expressionFromIndexAccessStructure(iap);
+	expectToken(Token::LParen);
+
+	auto functionCallArguments = parseFunctionCallArguments();
+	spawnCallNodeFactory.markEndPosition();
+	nodeFactory.markEndPosition();
+	expectToken(Token::RParen);
+	auto spawnCall = spawnCallNodeFactory.createNode<SpawnCall>(
+		contractName,
+		functionCallArguments.arguments,
+		functionCallArguments.parameterNames,
+		functionCallArguments.parameterNameLocations
+	);
+//	spawnCall->annotation().kind = FunctionCallKind::SpawnCall;
+	return nodeFactory.createNode<SpawnStatement>(_docString, spawnCall);
 }
 
 ASTPointer<RevertStatement> Parser::parseRevertStatement(ASTPointer<ASTString> const& _docString)

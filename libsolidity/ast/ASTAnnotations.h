@@ -323,7 +323,8 @@ enum class FunctionCallKind
 {
 	FunctionCall,
 	TypeConversion,
-	StructConstructorCall
+	StructConstructorCall,
+	SpawnCall
 };
 
 struct FunctionCallAnnotation: ExpressionAnnotation

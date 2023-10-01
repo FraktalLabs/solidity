@@ -82,6 +82,7 @@ SignedIntegerType:
 	'int72' | 'int80' | 'int88' | 'int96' | 'int104' | 'int112' | 'int120' | 'int128' |
 	'int136' | 'int144' | 'int152' | 'int160' | 'int168' | 'int176' | 'int184' | 'int192' |
 	'int200' | 'int208' | 'int216' | 'int224' | 'int232' | 'int240' | 'int248' | 'int256';
+Spawn: 'spawn';
 Storage: 'storage';
 String: 'string';
 Struct: 'struct';
@@ -103,6 +104,7 @@ Using: 'using';
 View: 'view';
 Virtual: 'virtual';
 While: 'while';
+Yield: 'yield';
 
 LParen: '(';
 RParen: ')';
@@ -292,7 +294,7 @@ YulEVMBuiltin:
 	| 'delegatecall' | 'staticcall' | 'return' | 'revert' | 'selfdestruct' | 'invalid'
 	| 'log0' | 'log1' | 'log2' | 'log3' | 'log4' | 'chainid' | 'origin' | 'gasprice'
 	| 'blockhash' | 'coinbase' | 'timestamp' | 'number' | 'difficulty' | 'prevrandao'
-	| 'gaslimit' | 'basefee';
+	| 'gaslimit' | 'basefee' | 'yield' | 'spawn';
 
 YulLBrace: '{' -> pushMode(YulMode);
 YulRBrace: '}' -> popMode;

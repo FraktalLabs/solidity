@@ -736,6 +736,22 @@ void EmitStatement::accept(ASTConstVisitor& _visitor) const
 	_visitor.endVisit(*this);
 }
 
+void SpawnStatement::accept(ASTVisitor& _visitor)
+{
+	if (_visitor.visit(*this)) {
+		m_spawnCall->accept(_visitor);
+	}
+	_visitor.endVisit(*this);
+}
+
+void SpawnStatement::accept(ASTConstVisitor& _visitor) const
+{
+	if (_visitor.visit(*this)) {
+		m_spawnCall->accept(_visitor);
+	}
+	_visitor.endVisit(*this);
+}
+
 void ExpressionStatement::accept(ASTVisitor& _visitor)
 {
 	if (_visitor.visit(*this))
@@ -890,6 +906,26 @@ void FunctionCall::accept(ASTConstVisitor& _visitor) const
 		listAccept(m_arguments, _visitor);
 	}
 	_visitor.endVisit(*this);
+}
+
+void SpawnCall::accept(ASTVisitor& _visitor)
+{
+    if (_visitor.visit(*this))
+    {
+        m_expression->accept(_visitor);
+        listAccept(m_arguments, _visitor);
+    }
+    _visitor.endVisit(*this);
+}
+
+void SpawnCall::accept(ASTConstVisitor& _visitor) const
+{
+    if (_visitor.visit(*this))
+    {
+        m_expression->accept(_visitor);
+        listAccept(m_arguments, _visitor);
+    }
+    _visitor.endVisit(*this);
 }
 
 void FunctionCallOptions::accept(ASTVisitor& _visitor)

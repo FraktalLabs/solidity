@@ -322,7 +322,7 @@ static std::map<Instruction, InstructionInfo> const c_instructionInfo =
 	{ Instruction::RETURN,		{ "RETURN",			0, 2, 0, true, Tier::Zero } },
 	{ Instruction::DELEGATECALL,	{ "DELEGATECALL",	0, 6, 1, true, Tier::Special } },
 	{ Instruction::STATICCALL,	{ "STATICCALL",		0, 6, 1, true, Tier::Special } },
-	{ Instruction::CHANCREATE,  { "CHANCREATE",     0, 0, 1, true, Tier::VeryLow } }, // TODO: Gas, and side effect
+	{ Instruction::CHANCREATE,  { "CHANCREATE",     0, 1, 1, true, Tier::VeryLow } }, // TODO: Gas, and side effect
 	{ Instruction::CHANSEND,    { "CHANSEND",       0, 2, 0, true, Tier::VeryLow } }, // TODO
     { Instruction::CHANRECV,    { "CHANRECV",       0, 1, 1, true, Tier::VeryLow } }, // TODO
 	{ Instruction::SPAWN,       { "SPAWN",          0, 1, 0, true, Tier::VeryLow } }, // TODO: Gase, Side effect

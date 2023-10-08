@@ -1223,6 +1223,7 @@ public:
 		BareDelegateCall, ///< DELEGATECALL without function hash
 		BareStaticCall, ///< STATICCALL without function hash
 		Yield, ///< yield coroutine
+		ChanCreate, ///< create channel
 		Creation, ///< external call using CREATE
 		Send, ///< CALL, but without data and gas
 		Transfer, ///< CALL, but without data and throws on error

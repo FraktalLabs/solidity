@@ -1173,6 +1173,12 @@ void IRGeneratorForStatements::endVisit(FunctionCall const& _functionCall)
 		appendCode() << "yield()\n";
 		break;
 	}
+	case FunctionType::Kind::ChanCreate:
+	{
+		// TODO: sol asserts
+		appendCode() << "chancreate(" << IRVariable(*arguments[0]).commaSeparatedList() << ")\n";
+		break;
+	}
 	case FunctionType::Kind::ABIEncode:
 	case FunctionType::Kind::ABIEncodePacked:
 	case FunctionType::Kind::ABIEncodeWithSelector:

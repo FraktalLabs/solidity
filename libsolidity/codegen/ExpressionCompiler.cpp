@@ -919,6 +919,11 @@ bool ExpressionCompiler::visit(FunctionCall const& _functionCall)
 			// TODO: asserts and checks and things
 			m_context << Instruction::YIELD;
 			break;
+		case FunctionType::Kind::ChanCreate:
+			solAssert(arguments.size() == 1, "");
+			arguments.front()->accept(*this);
+			m_context << Instruction::CHANCREATE;
+			break;
 		case FunctionType::Kind::Revert:
 		{
 			if (arguments.empty())

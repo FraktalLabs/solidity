@@ -3007,6 +3007,7 @@ string FunctionType::richIdentifier() const
 	case Kind::BareDelegateCall: id += "baredelegatecall"; break;
 	case Kind::BareStaticCall: id += "barestaticcall"; break;
 	case Kind::Yield: id += "yield"; break;
+	case Kind::ChanCreate: id += "chancreate"; break;
 	case Kind::Creation: id += "creation"; break;
 	case Kind::Send: id += "send"; break;
 	case Kind::Transfer: id += "transfer"; break;

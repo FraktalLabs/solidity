@@ -1292,6 +1292,7 @@ void CompilerUtils::convertType(
 		if (_cleanupNeeded)
 			m_context << Instruction::ISZERO << Instruction::ISZERO;
 		break;
+	//TODO: Channel
 	default:
 		// we used to allow conversions from function to address
 		solAssert(!(stackTypeCategory == Type::Category::Function && targetTypeCategory == Type::Category::Address));

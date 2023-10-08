@@ -41,6 +41,8 @@ TupleType const TypeProvider::m_emptyTuple{};
 AddressType const TypeProvider::m_payableAddress{StateMutability::Payable};
 AddressType const TypeProvider::m_address{StateMutability::NonPayable};
 
+ChannelType const TypeProvider::m_channel{};
+
 array<unique_ptr<IntegerType>, 32> const TypeProvider::m_intM{{
 	{make_unique<IntegerType>(8 * 1, IntegerType::Modifier::Signed)},
 	{make_unique<IntegerType>(8 * 2, IntegerType::Modifier::Signed)},
@@ -247,6 +249,8 @@ Type const* TypeProvider::fromElementaryTypeName(ElementaryTypeNameToken const& 
 	}
 	case Token::Bool:
 		return boolean();
+	case Token::Channel:
+		return channel();
 	case Token::Bytes:
 		return bytesStorage();
 	case Token::String:

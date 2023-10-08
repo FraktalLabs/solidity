@@ -1176,7 +1176,9 @@ void IRGeneratorForStatements::endVisit(FunctionCall const& _functionCall)
 	case FunctionType::Kind::ChanCreate:
 	{
 		// TODO: sol asserts
-		appendCode() << "chancreate(" << IRVariable(*arguments[0]).commaSeparatedList() << ")\n";
+		string const yulChannelVar = IRVariable(_functionCall).name();
+		appendCode() << "let " << yulChannelVar << " := chancreate("
+			<< IRVariable(*arguments[0]).commaSeparatedList() << ")\n";
 		break;
 	}
 	case FunctionType::Kind::ABIEncode:

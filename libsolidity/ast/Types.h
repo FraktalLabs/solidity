@@ -175,7 +175,7 @@ public:
 	enum class Category
 	{
 		Address, Integer, RationalNumber, StringLiteral, Bool, FixedPoint, Array, ArraySlice,
-		FixedBytes, Contract, Struct, Function, Enum, UserDefinedValueType, Tuple,
+		FixedBytes, Contract, Struct, Function, Enum, UserDefinedValueType, Tuple, Channel,
 		Mapping, TypeType, Modifier, Magic, Module,
 		InaccessibleDynamic
 	};
@@ -696,6 +696,29 @@ public:
 	bool nameable() const override { return true; }
 
 	std::string toString(bool) const override { return "bool"; }
+	u256 literalValue(Literal const* _literal) const override;
+	Type const* encodingType() const override { return this; }
+	TypeResult interfaceType(bool) const override { return this; }
+};
+
+/**
+ * The Channel type.
+ */
+class ChannelType: public Type
+{
+public:
+	Category category() const override { return Category::Channel; }
+	std::string richIdentifier() const override { return "t_channel"; }
+	TypeResult unaryOperatorResult(Token _operator) const override;
+	TypeResult binaryOperatorResult(Token _operator, Type const* _other) const override;
+
+	unsigned calldataEncodedSize(bool _padded) const override{ return _padded ? 32 : 1; }
+	unsigned storageBytes() const override { return 1; }
+	bool leftAligned() const override { return false; }
+	bool isValueType() const override { return true; }
+	bool nameable() const override { return true; }
+
+	std::string toString(bool) const override { return "channel"; }
 	u256 literalValue(Literal const* _literal) const override;
 	Type const* encodingType() const override { return this; }
 	TypeResult interfaceType(bool) const override { return this; }

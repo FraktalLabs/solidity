@@ -147,7 +147,6 @@ namespace solidity::langutil
 	K(Assembly, "assembly", 0)                                         \
 	K(Break, "break", 0)                                               \
 	K(Catch, "catch", 0)                                               \
-	K(ChanCreate, "chancreate", 0)                                     \
 	K(Constant, "constant", 0)                                         \
 	K(Constructor, "constructor", 0)                                   \
 	K(Continue, "continue", 0)                                         \
@@ -196,7 +195,6 @@ namespace solidity::langutil
 	K(View, "view", 0)                                                 \
 	K(Virtual, "virtual", 0)                                           \
 	K(While, "while", 0)                                               \
-	K(Yield, "yield", 0)                                               \
 	\
 	/* Ether subdenominations */                                       \
 	K(SubWei, "wei", 0)                                                \
@@ -215,6 +213,7 @@ namespace solidity::langutil
 	K(String, "string", 0)                                             \
 	K(Address, "address", 0)                                           \
 	K(Bool, "bool", 0)                                                 \
+	K(Channel, "channel", 0)                                           \
 	K(Fixed, "fixed", 0)                                               \
 	K(UFixed, "ufixed", 0)                                             \
 	T(IntM, "intM", 0)                                                 \

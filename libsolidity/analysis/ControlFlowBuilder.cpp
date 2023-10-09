@@ -598,6 +598,7 @@ bool ControlFlowBuilder::visit(VariableDeclaration const& _variableDeclaration)
 	return true;
 }
 
+//TODO: ChannelReceiveStatement
 bool ControlFlowBuilder::visit(VariableDeclarationStatement const& _variableDeclarationStatement)
 {
 	solAssert(!!m_currentNode, "");

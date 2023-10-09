@@ -1334,6 +1334,35 @@ void TypeChecker::endVisit(ArrayTypeName const& _typeName)
 	);
 }
 
+bool TypeChecker::visit(ChannelReceiveStatement const& _statement)
+{
+	if (!_statement.channel())
+	{
+		m_errorReporter.typeError(1234_error, _statement.location(), "Channel receive statement without channel.");
+		return false;
+	}
+
+	// Check that the channel is a channel.
+	// TODO
+	//if (type(*_statement.channel())->category() != Type::Category::Channel)
+	//{
+	//	m_errorReporter.typeError(1234_error, _statement.location(), "Channel receive statement with non-channel channel.");
+	//	return false;
+	//}
+
+	// Check that the channel is a channel of the correct type.
+	// TODO
+	//ChannelType const& channelType = dynamic_cast<ChannelType const&>(*type(*_statement.channel()));
+	//if (channelType.elementType() != type(*_statement.expression()))
+	//{
+	//	m_errorReporter.typeError(1234_error, _statement.location(), "Channel receive statement with channel of wrong type.");
+	//	return false;
+	//}
+	_statement.channel()->accept(*this);
+
+	return false;
+}
+
 bool TypeChecker::visit(VariableDeclarationStatement const& _statement)
 {
 	if (!_statement.initialValue())

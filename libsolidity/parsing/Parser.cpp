@@ -1797,6 +1797,13 @@ ASTPointer<VariableDeclarationStatement> Parser::parseVariableDeclarationStateme
 		value = parseExpression();
 		nodeFactory.setEndPositionFromNode(value);
 	}
+	else if (m_scanner->currentToken() == Token::LeftArrow)
+	{
+		advance();
+		ASTPointer<Expression> channel = parseExpression();
+		nodeFactory.setEndPositionFromNode(channel);
+		return nodeFactory.createNode<ChannelReceiveStatement>(_docString, variables, channel);
+	}
 	return nodeFactory.createNode<VariableDeclarationStatement>(_docString, variables, value);
 }
 

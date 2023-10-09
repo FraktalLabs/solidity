@@ -106,6 +106,7 @@ public:
 	std::string constantValueFunction(VariableDeclaration const& _constant);
 
 	void endVisit(VariableDeclarationStatement const& _variableDeclaration) override;
+	void endVisit(ChannelReceiveStatement const& _channelReceive) override;
 	bool visit(Conditional const& _conditional) override;
 	bool visit(Assignment const& _assignment) override;
 	bool visit(TupleExpression const& _tuple) override;

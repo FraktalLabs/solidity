@@ -794,6 +794,32 @@ void VariableDeclarationStatement::accept(ASTConstVisitor& _visitor) const
 	_visitor.endVisit(*this);
 }
 
+void ChannelReceiveStatement::accept(ASTVisitor& _visitor)
+{
+	if (_visitor.visit(*this))
+	{
+		for (ASTPointer<VariableDeclaration> const& var: m_variables)
+			if (var)
+				var->accept(_visitor);
+		if (m_initialValue)
+			m_initialValue->accept(_visitor);
+	}
+	_visitor.endVisit(*this);
+}
+
+void ChannelReceiveStatement::accept(ASTConstVisitor& _visitor) const
+{
+	if (_visitor.visit(*this))
+	{
+		for (ASTPointer<VariableDeclaration> const& var: m_variables)
+			if (var)
+				var->accept(_visitor);
+		if (m_initialValue)
+			m_initialValue->accept(_visitor);
+	}
+	_visitor.endVisit(*this);
+}
+
 void Conditional::accept(ASTVisitor& _visitor)
 {
 	if (_visitor.visit(*this))

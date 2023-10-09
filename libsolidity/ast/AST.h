@@ -1925,7 +1925,7 @@ public:
 	std::vector<ASTPointer<VariableDeclaration>> const& declarations() const { return m_variables; }
 	Expression const* initialValue() const { return m_initialValue.get(); }
 
-private:
+protected:
 	/// List of variables, some of which can be empty pointers (unnamed components).
 	/// Note that the ``m_value`` member of these is unused. Instead, ``m_initialValue``
 	/// below is used, because the initial value can be a single expression assigned
@@ -1933,6 +1933,22 @@ private:
 	std::vector<ASTPointer<VariableDeclaration>> m_variables;
 	/// The assigned expression / initial value.
 	ASTPointer<Expression> m_initialValue;
+};
+
+class ChannelReceiveStatement: public VariableDeclarationStatement
+{
+public:
+	ChannelReceiveStatement(
+		int64_t _id,
+		SourceLocation const& _location,
+		ASTPointer<ASTString> const& _docString,
+		std::vector<ASTPointer<VariableDeclaration>> _variables,
+		ASTPointer<Expression> _channel
+	):
+		VariableDeclarationStatement(_id, _location, _docString, std::move(_variables), std::move(_channel)) {}
+	void accept(ASTVisitor& _visitor) override;
+	void accept(ASTConstVisitor& _visitor) const override;
+	Expression const* channel() const { return m_initialValue.get(); }
 };
 
 /**

@@ -108,6 +108,15 @@ void ReferencesResolver::endVisit(VariableDeclarationStatement const& _varDeclSt
 			m_resolver.activateVariable(var->name());
 }
 
+void ReferencesResolver::endVisit(ChannelReceiveStatement const& _channelReceiveStatement)
+{
+	if (!m_resolveInsideCode)
+		return;
+	for (auto const& var: _channelReceiveStatement.declarations())
+		if (var)
+			m_resolver.activateVariable(var->name());
+}
+
 bool ReferencesResolver::visit(VariableDeclaration const& _varDecl)
 {
 	if (_varDecl.documentation())

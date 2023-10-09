@@ -404,6 +404,17 @@ void IRGeneratorForStatements::endVisit(VariableDeclarationStatement const& _var
 			}
 }
 
+void IRGeneratorForStatements::endVisit(ChannelReceiveStatement const& _statement)
+{
+	setLocation(_statement);
+
+	Expression const* channel = _statement.channel();
+	VariableDeclaration const& varDecl = *_statement.declarations().front();
+	define(m_context.addLocalVariable(varDecl));
+
+	appendCode() << "chanrecv(" << IRVariable(*channel).commaSeparatedList() << ")\n";
+}
+
 bool IRGeneratorForStatements::visit(Conditional const& _conditional)
 {
 	_conditional.condition().accept(*this);

@@ -120,6 +120,7 @@ private:
 	bool visit(SpawnStatement const& _spawn) override;
 	bool visit(RevertStatement const& _revert) override;
 	bool visit(VariableDeclarationStatement const& _variableDeclarationStatement) override;
+	bool visit(ChannelReceiveStatement const& _channelReceiveStatement) override;
 	bool visit(ExpressionStatement const& _expressionStatement) override;
 	bool visit(PlaceholderStatement const&) override;
 	bool visit(Block const& _block) override;

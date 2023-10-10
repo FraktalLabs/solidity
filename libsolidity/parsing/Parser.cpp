@@ -1797,6 +1797,13 @@ ASTPointer<VariableDeclarationStatement> Parser::parseVariableDeclarationStateme
 		value = parseExpression();
 		nodeFactory.setEndPositionFromNode(value);
 	}
+	else if (m_scanner->currentToken() == Token::LeftArrow)
+	{
+		advance();
+		ASTPointer<Expression> channel = parseExpression();
+		nodeFactory.setEndPositionFromNode(channel);
+		return nodeFactory.createNode<ChannelReceiveStatement>(_docString, variables, channel);
+	}
 	return nodeFactory.createNode<VariableDeclarationStatement>(_docString, variables, value);
 }
 
@@ -1807,6 +1814,14 @@ ASTPointer<ExpressionStatement> Parser::parseExpressionStatement(
 {
 	RecursionGuard recursionGuard(*this);
 	ASTPointer<Expression> expression = parseExpression(_partialParserResult);
+	if (m_scanner->currentToken() == Token::RightArrow)
+	{
+		advance();
+		ASTPointer<Expression> channel = parseExpression();
+		ASTNodeFactory nodeFactory(*this, expression);
+		nodeFactory.setEndPositionFromNode(channel);
+		return nodeFactory.createNode<ChannelSendStatement>(_docString, expression, channel);
+	}
 	return ASTNodeFactory(*this, expression).createNode<ExpressionStatement>(_docString, expression);
 }
 
@@ -1835,6 +1850,14 @@ ASTPointer<Expression> Parser::parseExpression(
 		nodeFactory.setEndPositionFromNode(falseExpression);
 		return nodeFactory.createNode<Conditional>(expression, trueExpression, falseExpression);
 	}
+	//else if (m_scanner->currentToken() == Token::RightArrow)
+	//{
+	//	advance();
+	//	ASTPointer<Expression> channel = parseExpression();
+	//	ASTNodeFactory nodeFactory(*this, expression);
+	//	nodeFactory.setEndPositionFromNode(channel);
+	//	return nodeFactory.createNode<ChannelSendExpression>(expression, channel);
+	//}
 	else
 		return expression;
 }

@@ -81,6 +81,7 @@ namespace solidity::langutil
 	T(Conditional, "?", 3)                                              \
 	T(DoubleArrow, "=>", 0)                                             \
 	T(RightArrow, "->", 0)                                              \
+	T(LeftArrow, "<-", 0)                                               \
 	\
 	/* Assignment operators. */										\
 	/* IsAssignmentOp() relies on this block of enum values being */	\
@@ -212,6 +213,7 @@ namespace solidity::langutil
 	K(String, "string", 0)                                             \
 	K(Address, "address", 0)                                           \
 	K(Bool, "bool", 0)                                                 \
+	K(Channel, "channel", 0)                                           \
 	K(Fixed, "fixed", 0)                                               \
 	K(UFixed, "ufixed", 0)                                             \
 	T(IntM, "intM", 0)                                                 \

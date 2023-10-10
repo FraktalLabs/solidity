@@ -1334,6 +1334,35 @@ void TypeChecker::endVisit(ArrayTypeName const& _typeName)
 	);
 }
 
+bool TypeChecker::visit(ChannelReceiveStatement const& _statement)
+{
+	if (!_statement.channel())
+	{
+		m_errorReporter.typeError(1234_error, _statement.location(), "Channel receive statement without channel.");
+		return false;
+	}
+
+	// Check that the channel is a channel.
+	// TODO
+	//if (type(*_statement.channel())->category() != Type::Category::Channel)
+	//{
+	//	m_errorReporter.typeError(1234_error, _statement.location(), "Channel receive statement with non-channel channel.");
+	//	return false;
+	//}
+
+	// Check that the channel is a channel of the correct type.
+	// TODO
+	//ChannelType const& channelType = dynamic_cast<ChannelType const&>(*type(*_statement.channel()));
+	//if (channelType.elementType() != type(*_statement.expression()))
+	//{
+	//	m_errorReporter.typeError(1234_error, _statement.location(), "Channel receive statement with channel of wrong type.");
+	//	return false;
+	//}
+	_statement.channel()->accept(*this);
+
+	return false;
+}
+
 bool TypeChecker::visit(VariableDeclarationStatement const& _statement)
 {
 	if (!_statement.initialValue())
@@ -1470,6 +1499,21 @@ void TypeChecker::endVisit(ExpressionStatement const& _statement)
 				m_errorReporter.warning(5878_error, _statement.location(), "Failure condition of 'send' ignored. Consider using 'transfer' instead.");
 		}
 	}
+}
+
+// TODO TODO: Move above expressionstatement ( not an expression but a statement )/ inherit from expression statement
+bool TypeChecker::visit(ChannelSendStatement const& _statement)
+{
+	//expectType(_expression.channel(), *TypeProvider::channel());
+	_statement.value()->accept(*this);
+	_statement.channel()->accept(*this);
+
+	//_statement.annotation().isConstant = false; // TODO: type(_expression.value())->isConstant();
+	//_statement.annotation().type = type(_expression.value());
+	//_statement.annotation().isPure = false; // type(_expression.value())->isPure();
+	//_statement.annotation().isLValue = false; // type(_expression.value())->isLValue();
+
+	return false;
 }
 
 bool TypeChecker::visit(Conditional const& _conditional)

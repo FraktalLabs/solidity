@@ -94,7 +94,9 @@ public:
 	virtual bool visit(SpawnStatement& _node) { return visitNode(_node); }
 	virtual bool visit(RevertStatement& _node) { return visitNode(_node); }
 	virtual bool visit(VariableDeclarationStatement& _node) { return visitNode(_node); }
+	virtual bool visit(ChannelReceiveStatement& _node) { return visitNode(_node); }
 	virtual bool visit(ExpressionStatement& _node) { return visitNode(_node); }
+	virtual bool visit(ChannelSendStatement& _node) { return visitNode(_node); }
 	virtual bool visit(Conditional& _node) { return visitNode(_node); }
 	virtual bool visit(Assignment& _node) { return visitNode(_node); }
 	virtual bool visit(TupleExpression& _node) { return visitNode(_node); }
@@ -152,7 +154,9 @@ public:
 	virtual void endVisit(SpawnStatement& _node) { endVisitNode(_node); }
 	virtual void endVisit(RevertStatement& _node) { endVisitNode(_node); }
 	virtual void endVisit(VariableDeclarationStatement& _node) { endVisitNode(_node); }
+	virtual void endVisit(ChannelReceiveStatement& _node) { endVisitNode(_node); }
 	virtual void endVisit(ExpressionStatement& _node) { endVisitNode(_node); }
+	virtual void endVisit(ChannelSendStatement& _node) { endVisitNode(_node); }
 	virtual void endVisit(Conditional& _node) { endVisitNode(_node); }
 	virtual void endVisit(Assignment& _node) { endVisitNode(_node); }
 	virtual void endVisit(TupleExpression& _node) { endVisitNode(_node); }
@@ -232,7 +236,9 @@ public:
 	virtual bool visit(SpawnStatement const& _node) { return visitNode(_node); }
 	virtual bool visit(RevertStatement const& _node) { return visitNode(_node); }
 	virtual bool visit(VariableDeclarationStatement const& _node) { return visitNode(_node); }
+	virtual bool visit(ChannelReceiveStatement const& _node) { return visitNode(_node); }
 	virtual bool visit(ExpressionStatement const& _node) { return visitNode(_node); }
+	virtual bool visit(ChannelSendStatement const& _node) { return visitNode(_node); }
 	virtual bool visit(Conditional const& _node) { return visitNode(_node); }
 	virtual bool visit(Assignment const& _node) { return visitNode(_node); }
 	virtual bool visit(TupleExpression const& _node) { return visitNode(_node); }
@@ -290,7 +296,9 @@ public:
 	virtual void endVisit(SpawnStatement const& _node) { endVisitNode(_node); }
 	virtual void endVisit(RevertStatement const& _node) { endVisitNode(_node); }
 	virtual void endVisit(VariableDeclarationStatement const& _node) { endVisitNode(_node); }
+	virtual void endVisit(ChannelReceiveStatement const& _node) { endVisitNode(_node); }
 	virtual void endVisit(ExpressionStatement const& _node) { endVisitNode(_node); }
+	virtual void endVisit(ChannelSendStatement const& _node) { endVisitNode(_node); }
 	virtual void endVisit(Conditional const& _node) { endVisitNode(_node); }
 	virtual void endVisit(Assignment const& _node) { endVisitNode(_node); }
 	virtual void endVisit(TupleExpression const& _node) { endVisitNode(_node); }

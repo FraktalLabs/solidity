@@ -774,6 +774,7 @@ bool ASTJsonExporter::visit(RevertStatement const& _node)
 	return false;
 }
 
+//TODO: ChannelReceiveStatement
 bool ASTJsonExporter::visit(VariableDeclarationStatement const& _node)
 {
 	Json::Value varDecs(Json::arrayValue);

@@ -75,6 +75,7 @@ private:
 	bool visit(ForStatement const& _for) override;
 	void endVisit(ForStatement const& _for) override;
 	void endVisit(VariableDeclarationStatement const& _varDeclStatement) override;
+	void endVisit(ChannelReceiveStatement const& _channelReceiveStatement) override;
 	bool visit(VariableDeclaration const& _varDecl) override;
 	bool visit(Identifier const& _identifier) override;
 	bool visit(FunctionDefinition const& _functionDefinition) override;

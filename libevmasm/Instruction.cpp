@@ -167,6 +167,9 @@ std::map<std::string, Instruction> const solidity::evmasm::c_instructions =
 	{ "CALL", Instruction::CALL },
 	{ "CALLCODE", Instruction::CALLCODE },
 	{ "STATICCALL", Instruction::STATICCALL },
+	{ "CHANCREATE", Instruction::CHANCREATE },
+	{ "CHANSEND", Instruction::CHANSEND },
+	{ "CHANRECV", Instruction::CHANRECV },
 	{ "SPAWN", Instruction::SPAWN },
 	{ "YIELD", Instruction::YIELD },
 	{ "RETURN", Instruction::RETURN },
@@ -319,6 +322,9 @@ static std::map<Instruction, InstructionInfo> const c_instructionInfo =
 	{ Instruction::RETURN,		{ "RETURN",			0, 2, 0, true, Tier::Zero } },
 	{ Instruction::DELEGATECALL,	{ "DELEGATECALL",	0, 6, 1, true, Tier::Special } },
 	{ Instruction::STATICCALL,	{ "STATICCALL",		0, 6, 1, true, Tier::Special } },
+	{ Instruction::CHANCREATE,  { "CHANCREATE",     0, 1, 1, true, Tier::VeryLow } }, // TODO: Gas, and side effect
+	{ Instruction::CHANSEND,    { "CHANSEND",       0, 2, 0, true, Tier::VeryLow } }, // TODO
+    { Instruction::CHANRECV,    { "CHANRECV",       0, 1, 1, true, Tier::VeryLow } }, // TODO
 	{ Instruction::SPAWN,       { "SPAWN",          0, 1, 0, true, Tier::VeryLow } }, // TODO: Gase, Side effect
 	{ Instruction::YIELD,       { "YIELD",          0, 0, 0, true, Tier::VeryLow } }, // TODO: Gas & SideEffects
 	{ Instruction::CREATE2,		{ "CREATE2",		0, 4, 1, true, Tier::Special } },

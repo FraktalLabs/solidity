@@ -1411,6 +1411,33 @@ TypeResult BoolType::binaryOperatorResult(Token _operator, Type const* _other) c
 		return nullptr;
 }
 
+u256 ChannelType::literalValue(Literal const* _literal) const
+{
+	solAssert(_literal, "");
+	return u256(_literal->valueWithoutUnderscores());
+}
+
+TypeResult ChannelType::unaryOperatorResult(Token _operator) const
+{
+	//TODO: things
+	if (_operator == Token::Delete)
+		return TypeProvider::emptyTuple();
+	else if (_operator == Token::Not)
+		return this;
+	else
+		return nullptr;
+}
+
+TypeResult ChannelType::binaryOperatorResult(Token _operator, Type const* _other) const
+{
+	if (category() != _other->category())
+		return nullptr;
+	if (_operator == Token::Equal || _operator == Token::NotEqual || _operator == Token::And || _operator == Token::Or)
+		return _other;
+	else
+		return nullptr;
+}
+
 Type const* ContractType::encodingType() const
 {
 	if (isSuper())
@@ -3007,6 +3034,7 @@ string FunctionType::richIdentifier() const
 	case Kind::BareDelegateCall: id += "baredelegatecall"; break;
 	case Kind::BareStaticCall: id += "barestaticcall"; break;
 	case Kind::Yield: id += "yield"; break;
+	case Kind::ChanCreate: id += "chancreate"; break;
 	case Kind::Creation: id += "creation"; break;
 	case Kind::Send: id += "send"; break;
 	case Kind::Transfer: id += "transfer"; break;

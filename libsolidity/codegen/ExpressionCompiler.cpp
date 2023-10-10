@@ -552,6 +552,18 @@ bool ExpressionCompiler::visit(BinaryOperation const& _binaryOperation)
 	return false;
 }
 
+//TODO: Remove?
+//bool ExpressionCompiler::visit(ChannelReceiveStatement const& _channelReceiveStatement)
+//{
+//	CompilerContext::LocationSetter locationSetter(m_context, _channelReceiveStatement);
+//
+//	// Get channel expression and push it on the stack
+//	// Expression const* channelExpression = _channelReceiveStatement.channel();
+//	//acceptAndConvert(channelExpression, Type::ChannelType, false);
+//	m_context << Instruction::CHANRECV;
+//	return false;
+//}
+
 bool ExpressionCompiler::visit(SpawnCall const& _spawnCall)
 {
 //	auto functionCallKind = *_spawnCall.annotation().kind;
@@ -918,6 +930,11 @@ bool ExpressionCompiler::visit(FunctionCall const& _functionCall)
 		case FunctionType::Kind::Yield:
 			// TODO: asserts and checks and things
 			m_context << Instruction::YIELD;
+			break;
+		case FunctionType::Kind::ChanCreate:
+			solAssert(arguments.size() == 1, "");
+			arguments.front()->accept(*this);
+			m_context << Instruction::CHANCREATE;
 			break;
 		case FunctionType::Kind::Revert:
 		{

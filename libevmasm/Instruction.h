@@ -182,6 +182,9 @@ enum class Instruction: uint8_t
 	RETURN,				///< halt execution returning output data
 	DELEGATECALL,		///< like CALLCODE but keeps caller's value and sender
 	CREATE2 = 0xf5,		///< create new account with associated code at address `sha3(0xff + sender + salt + init code) % 2**160`
+	CHANCREATE = 0xf6,	///< create new coroutine channel in scope context
+	CHANSEND   = 0xf7,	///< send message to coroutine channel
+	CHANRECV   = 0xf8,	///< receive message from coroutine channel
 	STATICCALL = 0xfa,	///< like CALL but disallow state modifications
 
 	SPAWN = 0xfb,		///< add coroutine to queue based on attached function call

@@ -366,6 +366,11 @@ bool isBool(frontend::Type const& _type)
 	return _type.category() == frontend::Type::Category::Bool;
 }
 
+//bool isChannel(frontend::Type const& _type)
+//{
+//	return _type.category() == frontend::Type::Category::Channel;
+//}
+
 bool isFunction(frontend::Type const& _type)
 {
 	return _type.category() == frontend::Type::Category::Function;
@@ -480,6 +485,7 @@ smtutil::Expression zeroValue(frontend::Type const* _type)
 			return 0;
 		if (isBool(*_type))
 			return smtutil::Expression(false);
+		//TODO: Channel
 		if (isArray(*_type) || isMapping(*_type))
 		{
 			auto tupleSort = dynamic_pointer_cast<TupleSort>(smtSort(*_type));

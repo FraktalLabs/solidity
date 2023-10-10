@@ -559,6 +559,8 @@ void Scanner::scanToken()
 				token = selectToken(Token::LessThanOrEqual);
 			else if (m_char == '<')
 				token = selectToken('=', Token::AssignShl, Token::SHL);
+			else if (m_char == '-')
+				token = selectToken(Token::LeftArrow);
 			else
 				token = Token::LessThan;
 			break;

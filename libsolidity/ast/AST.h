@@ -1969,8 +1969,30 @@ public:
 
 	Expression const& expression() const { return *m_expression; }
 
-private:
+protected:
 	ASTPointer<Expression> m_expression;
+};
+
+class ChannelSendStatement: public ExpressionStatement
+{
+public:
+	ChannelSendStatement(
+		int64_t _id,
+		SourceLocation const& _location,
+		ASTPointer<ASTString> const& _docString,
+		ASTPointer<Expression> _expression, //TODO: just use _value?
+		ASTPointer<Expression> _channel
+	):
+		ExpressionStatement(_id, _location, _docString, std::move(_expression)),
+		m_channel(std::move(_channel)) {}
+	void accept(ASTVisitor& _visitor) override;
+	void accept(ASTConstVisitor& _visitor) const override;
+
+	Expression const* channel() const { return m_channel.get(); }
+	Expression const* value() const { return m_expression.get(); }
+
+private:
+	ASTPointer<Expression> m_channel;
 };
 
 /// @}

@@ -1419,6 +1419,17 @@ bool ContractCompiler::visit(ChannelReceiveStatement const& _channelReceiveState
 	return false;
 }
 
+bool ContractCompiler::visit(ChannelSendStatement const& _channelSendStatement)
+{
+	StackHeightChecker checker(m_context);
+	CompilerContext::LocationSetter locationSetter(m_context, _channelSendStatement);
+	compileExpression(*_channelSendStatement.value());
+	compileExpression(*_channelSendStatement.channel());
+	m_context << Instruction::CHANSEND;
+	checker.check();
+	return false;
+}
+
 bool ContractCompiler::visit(ExpressionStatement const& _expressionStatement)
 {
 	StackHeightChecker checker(m_context);

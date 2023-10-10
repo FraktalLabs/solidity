@@ -1501,6 +1501,21 @@ void TypeChecker::endVisit(ExpressionStatement const& _statement)
 	}
 }
 
+// TODO TODO: Move above expressionstatement ( not an expression but a statement )/ inherit from expression statement
+bool TypeChecker::visit(ChannelSendStatement const& _statement)
+{
+	//expectType(_expression.channel(), *TypeProvider::channel());
+	_statement.value()->accept(*this);
+	_statement.channel()->accept(*this);
+
+	//_statement.annotation().isConstant = false; // TODO: type(_expression.value())->isConstant();
+	//_statement.annotation().type = type(_expression.value());
+	//_statement.annotation().isPure = false; // type(_expression.value())->isPure();
+	//_statement.annotation().isLValue = false; // type(_expression.value())->isLValue();
+
+	return false;
+}
+
 bool TypeChecker::visit(Conditional const& _conditional)
 {
 	expectType(_conditional.condition(), *TypeProvider::boolean());

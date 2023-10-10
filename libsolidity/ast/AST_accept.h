@@ -820,6 +820,26 @@ void ChannelReceiveStatement::accept(ASTConstVisitor& _visitor) const
 	_visitor.endVisit(*this);
 }
 
+void ChannelSendStatement::accept(ASTVisitor& _visitor)
+{
+	if (_visitor.visit(*this))
+	{
+		m_expression->accept(_visitor);
+		m_channel->accept(_visitor);
+	}
+	_visitor.endVisit(*this);
+}
+
+void ChannelSendStatement::accept(ASTConstVisitor& _visitor) const
+{
+	if (_visitor.visit(*this))
+	{
+		m_expression->accept(_visitor);
+		m_channel->accept(_visitor);
+	}
+	_visitor.endVisit(*this);
+}
+
 void Conditional::accept(ASTVisitor& _visitor)
 {
 	if (_visitor.visit(*this))

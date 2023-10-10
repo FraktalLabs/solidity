@@ -152,6 +152,7 @@ private:
 	bool visit(VariableDeclarationStatement const& _variable) override;
 	bool visit(ChannelReceiveStatement const& _variable) override;
 	void endVisit(ExpressionStatement const& _statement) override;
+	bool visit(ChannelSendStatement const& _expression) override;
 	bool visit(Conditional const& _conditional) override;
 	bool visit(Assignment const& _assignment) override;
 	bool visit(TupleExpression const& _tuple) override;

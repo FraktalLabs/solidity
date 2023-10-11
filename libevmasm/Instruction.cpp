@@ -172,6 +172,7 @@ std::map<std::string, Instruction> const solidity::evmasm::c_instructions =
 	{ "CHANRECV", Instruction::CHANRECV },
 	{ "SPAWN", Instruction::SPAWN },
 	{ "YIELD", Instruction::YIELD },
+	{ "CLOG", Instruction::CLOG },
 	{ "RETURN", Instruction::RETURN },
 	{ "DELEGATECALL", Instruction::DELEGATECALL },
 	{ "CREATE2", Instruction::CREATE2 },
@@ -327,6 +328,7 @@ static std::map<Instruction, InstructionInfo> const c_instructionInfo =
     { Instruction::CHANRECV,    { "CHANRECV",       0, 1, 1, true, Tier::VeryLow } }, // TODO
 	{ Instruction::SPAWN,       { "SPAWN",          0, 1, 0, true, Tier::VeryLow } }, // TODO: Gase, Side effect
 	{ Instruction::YIELD,       { "YIELD",          0, 0, 0, true, Tier::VeryLow } }, // TODO: Gas & SideEffects
+	{ Instruction::CLOG,        { "CLOG",           0, 1, 0, false, Tier::VeryLow } }, // TODO
 	{ Instruction::CREATE2,		{ "CREATE2",		0, 4, 1, true, Tier::Special } },
 	{ Instruction::REVERT,		{ "REVERT",		0, 2, 0, true, Tier::Zero } },
 	{ Instruction::INVALID,		{ "INVALID",		0, 0, 0, true, Tier::Zero } },

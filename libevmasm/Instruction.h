@@ -175,6 +175,7 @@ enum class Instruction: uint8_t
 	LOG2,				///< Makes a log entry; 2 topics.
 	LOG3,				///< Makes a log entry; 3 topics.
 	LOG4,				///< Makes a log entry; 4 topics.
+	CLOG,               ///< Logs encoded string to console
 
 	CREATE = 0xf0,		///< create a new account with associated code
 	CALL,				///< message-call into an account

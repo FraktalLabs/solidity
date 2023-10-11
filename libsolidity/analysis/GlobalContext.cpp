@@ -63,6 +63,7 @@ int magicVariableToID(std::string const& _name)
 	else if (_name == "this") return -28;
 	else if (_name == "yield") return -29;
 	else if (_name == "chancreate") return -30;
+	else if (_name == "print") return -31;
 	else
 		solAssert(false, "Unknown magic variable: \"" + _name + "\".");
 }
@@ -106,6 +107,7 @@ inline vector<shared_ptr<MagicVariableDeclaration const>> constructMagicVariable
 		)),
 		magicVarDecl("yield", TypeProvider::function(strings{}, strings{}, FunctionType::Kind::Yield, StateMutability::Pure)),
 		magicVarDecl("chancreate", TypeProvider::function(strings{"uint8"}, strings{"channel"}, FunctionType::Kind::ChanCreate)),
+		magicVarDecl("print", TypeProvider::function(strings{"string memory"}, strings{}, FunctionType::Kind::Clog, StateMutability::Pure))
 	};
 }
 

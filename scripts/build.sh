@@ -18,7 +18,7 @@ mkdir -p "${BUILDDIR}"
 cd "${BUILDDIR}"
 
 cmake .. -DUSE_Z3=OFF -DCMAKE_BUILD_TYPE="$BUILD_TYPE" "${@:2}"
-make -j2
+make -j8
 
 if [[ "${CI}" == "" ]]; then
 	echo "Installing ..."

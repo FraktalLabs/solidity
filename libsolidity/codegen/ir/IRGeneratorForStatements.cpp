@@ -1194,6 +1194,11 @@ void IRGeneratorForStatements::endVisit(FunctionCall const& _functionCall)
 		appendCode() << "yield()\n";
 		break;
 	}
+	case FunctionType::Kind::Clog:
+	{
+		appendCode() << "clog(" << IRVariable(*arguments[0]).commaSeparatedList() << ")\n";
+		break;
+	}
 	case FunctionType::Kind::ChanCreate:
 	{
 		// TODO: sol asserts

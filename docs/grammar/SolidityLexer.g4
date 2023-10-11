@@ -68,6 +68,7 @@ NumberUnit: 'wei' | 'gwei' | 'ether' | 'seconds' | 'minutes' | 'hours' | 'days' 
 Override: 'override';
 Payable: 'payable';
 Pragma: 'pragma' -> pushMode(PragmaMode);
+Print: 'print';
 Private: 'private';
 Public: 'public';
 Pure: 'pure';

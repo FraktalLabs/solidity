@@ -1247,6 +1247,7 @@ public:
 		BareStaticCall, ///< STATICCALL without function hash
 		Yield, ///< yield coroutine
 		ChanCreate, ///< create channel
+		Clog, ///< console log
 		Creation, ///< external call using CREATE
 		Send, ///< CALL, but without data and gas
 		Transfer, ///< CALL, but without data and throws on error

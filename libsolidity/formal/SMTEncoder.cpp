@@ -639,6 +639,9 @@ void SMTEncoder::endVisit(FunctionCall const& _funCall)
 	case FunctionType::Kind::Yield:
 		visitYield(_funCall);
 		break;
+	case FunctionType::Kind::Clog:
+		visitClog(_funCall);
+		break;
 	case FunctionType::Kind::ChanCreate:
 		visitChanCreate(_funCall);
 		break;
@@ -868,6 +871,19 @@ void SMTEncoder::visitYield(FunctionCall const& _funCall)
 	auto const& funType = dynamic_cast<FunctionType const&>(*_funCall.expression().annotation().type);
     auto kind = funType.kind();
 	solAssert(kind == FunctionType::Kind::Yield, "");
+}
+
+void SMTEncoder::visitClog(FunctionCall const& _funCall)
+{
+	auto const& funType = dynamic_cast<FunctionType const&>(*_funCall.expression().annotation().type);
+	auto kind = funType.kind();
+	solAssert(kind == FunctionType::Kind::Clog, "");
+
+	// TODO
+	//auto const& args = _funCall.arguments();
+	//solAssert(args.at(0), "");
+	//auto arg0 = expr(*args.at(0));
+	//solAssert(arg0.sort->kind == smtutil::Kind::StringLiteral, "");
 }
 
 void SMTEncoder::visitChanCreate(FunctionCall const& _funCall)

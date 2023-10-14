@@ -1,3 +1,26 @@
+# Fraktal Solidity Fork
+For more info on Fraktal : https://github.com/FraktalLabs/fraktal#fraktal
+
+This fork contains changes needed to compile Smart Contracts with Fraktal node features.
+Forked from Solidity v0.8.18
+
+## Current Changes
+
+1. Added Coroutine support to Solidity & Yul compiler(s)
+  - Solidity now supports : `yield()` and `spawn funcname(funcargs)`
+  - Yul now supports : `yield()` and `spawn(funcname(funcargs))`
+
+2. Added Channels support to Solidity & Yul compiler(s)
+  - Added `channel` type
+  - Solidity now supports : `channel ChanName = chancreate(chanBufferSize)`, `0x42 -> ChanName`, and `uint256 val <- ChanName`
+  - Yul now supports : `chanId := chancreate(chanBufSize)`, `chansend(chanId, 0x42)`, and `val := chanrecv(chanId)`
+
+3. Added Console Log support to Solidity & Yul compiler(s)
+  - Solidity now supports : `string memory s = "Hello, World!"; print(s);`
+  - Yul now supports : `clog(stringMemPtr)` ( after setting up string in memory )
+
+---
+
 # The Solidity Contract-Oriented Programming Language
 
 [![Matrix Chat](https://img.shields.io/badge/Matrix%20-chat-brightgreen?style=plastic&logo=matrix)](https://matrix.to/#/#ethereum_solidity:gitter.im)

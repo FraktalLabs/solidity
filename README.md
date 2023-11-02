@@ -7,8 +7,14 @@ Forked from Solidity v0.8.18
 ## Current Changes
 
 1. Added Coroutine support to Solidity & Yul compiler(s)
+  - **Contract Level Coroutines**
   - Solidity now supports : `yield()` and `spawn funcname(funcargs)`
   - Yul now supports : `yield()` and `spawn(funcname(funcargs))`
+
+  - **Call Level Coroutines**
+  - Solidity now supports : `xyield()` and `xspawn contract.funcname(funcargs)`
+  - Yul now supports : `xyield()` and `xspawn(funcname(funcargs))`
+  - TODO: xspawn this vs other
 
 2. Added Channels support to Solidity & Yul compiler(s)
   - Added `channel` type

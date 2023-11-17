@@ -284,6 +284,34 @@ void CodeTransform::operator()(FunctionCall const& _call)
 		  m_assembly.appendLabel(stopLabel);
 		  m_assembly.appendInstruction(evmasm::Instruction::STOP);
 		  m_assembly.appendLabel(postStopLabel);
+		} else if(_call.functionName.name.str() == "xspawn") { // TODO: ??
+		  AbstractAssembly::LabelID stopLabel = m_assembly.newLabelId();
+		  m_assembly.appendLabelReference(stopLabel);
+
+		  Scope::Function* function = nullptr;
+          yulAssert(m_scope->lookup(get<FunctionCall>(_call.arguments[0]).functionName.name, GenericVisitor{
+              [](Scope::Variable&) { yulAssert(false, "Expected function name."); },
+              [&](Scope::Function& _function) { function = &_function; }
+          }), "Function name not found.");
+          for (auto const& arg: get<FunctionCall>(_call.arguments[0]).arguments | ranges::views::reverse)
+              visitExpression(arg);
+
+		  m_assembly.setSourceLocation(originLocationOf(get<FunctionCall>(_call.arguments[0])));
+		  m_assembly.appendLabelReference(functionEntryID(*function));
+		  m_assembly.appendInstruction(evmasm::Instruction::XSPAWN);
+
+		  for ([[maybe_unused]] auto const& _: get<FunctionCall>(_call.arguments[0]).arguments | ranges::views::reverse)
+			  m_assembly.appendInstruction(evmasm::Instruction::POP);
+
+		  m_assembly.appendInstruction(evmasm::Instruction::POP);
+
+		  AbstractAssembly::LabelID postStopLabel = m_assembly.newLabelId();
+		  m_assembly.appendLabelReference(postStopLabel);
+		  m_assembly.appendInstruction(evmasm::Instruction::JUMP);
+
+		  m_assembly.appendLabel(stopLabel);
+		  m_assembly.appendInstruction(evmasm::Instruction::SPAWNSTOP);
+		  m_assembly.appendLabel(postStopLabel);
 		} else {
 		  for (auto&& [i, arg]: _call.arguments | ranges::views::enumerate | ranges::views::reverse)
 		  	if (!builtin->literalArgument(i))

@@ -173,6 +173,8 @@ std::map<std::string, Instruction> const solidity::evmasm::c_instructions =
 	{ "SPAWN", Instruction::SPAWN },
 	{ "YIELD", Instruction::YIELD },
 	{ "XYIELD", Instruction::XYIELD },
+	{ "XSPAWN", Instruction::XSPAWN },
+	{ "SPAWNSTOP", Instruction::SPAWNSTOP },
 	{ "CLOG", Instruction::CLOG },
 	{ "RETURN", Instruction::RETURN },
 	{ "DELEGATECALL", Instruction::DELEGATECALL },
@@ -328,6 +330,8 @@ static std::map<Instruction, InstructionInfo> const c_instructionInfo =
 	{ Instruction::CHANSEND,    { "CHANSEND",       0, 2, 0, true, Tier::VeryLow } }, // TODO
     { Instruction::CHANRECV,    { "CHANRECV",       0, 1, 1, true, Tier::VeryLow } }, // TODO
 	{ Instruction::SPAWN,       { "SPAWN",          0, 1, 0, true, Tier::VeryLow } }, // TODO: Gase, Side effect
+	{ Instruction::XSPAWN,      { "XSPAWN",          0, 1, 0, true, Tier::VeryLow } }, // TODO: Gase, Side effect
+	{ Instruction::SPAWNSTOP,       { "SPAWNSTOP",          0, 0, 0, true, Tier::VeryLow } }, // TODO: Gas & SideEffects
 	{ Instruction::YIELD,       { "YIELD",          0, 0, 0, true, Tier::VeryLow } }, // TODO: Gas & SideEffects
 	{ Instruction::XYIELD,       { "XYIELD",          0, 0, 0, true, Tier::VeryLow } }, // TODO: Gas & SideEffects
 	{ Instruction::CLOG,        { "CLOG",           0, 1, 0, false, Tier::VeryLow } }, // TODO

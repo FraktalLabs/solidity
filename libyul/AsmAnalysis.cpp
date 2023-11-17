@@ -431,6 +431,16 @@ vector<YulString> AsmAnalyzer::operator()(FunctionCall const& _funCall)
 			}
 
 			argTypes.emplace_back("spawn_function"_yulstring); //TODO: what to use for yulstring
+		} else if (_funCall.functionName.name.str() == "xspawn") {
+			// TODO: Check if arg is a function
+
+			// Inner Args
+			vector<YulString> innerArgTypes;
+			for (auto const& innerArg : get<FunctionCall>(arg).arguments) {
+				innerArgTypes.emplace_back(expectExpression(innerArg));
+			}
+
+			argTypes.emplace_back("xspawn_function"_yulstring); //TODO: what to use for yulstring
 		} else {
 			argTypes.emplace_back(expectExpression(arg));
 		}

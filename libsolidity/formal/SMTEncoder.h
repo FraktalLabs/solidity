@@ -214,6 +214,7 @@ protected:
 	void visitCryptoFunction(FunctionCall const& _funCall);
 	void visitGasLeft(FunctionCall const& _funCall);
 	void visitYield(FunctionCall const& _funCall);
+	void visitXYield(FunctionCall const& _funCall);
 	void visitClog(FunctionCall const& _funCall);
 	void visitChanCreate(FunctionCall const& _funCall);
 	virtual void visitAddMulMod(FunctionCall const& _funCall);

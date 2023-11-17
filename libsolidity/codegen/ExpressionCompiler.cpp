@@ -931,6 +931,10 @@ bool ExpressionCompiler::visit(FunctionCall const& _functionCall)
 			// TODO: asserts and checks and things
 			m_context << Instruction::YIELD;
 			break;
+		case FunctionType::Kind::XYield:
+			// TODO: asserts and checks and things
+			m_context << Instruction::XYIELD;
+			break;
 		case FunctionType::Kind::Clog:
 		{
 			// stack layout: memory ptr

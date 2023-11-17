@@ -152,6 +152,9 @@ struct EVMBuiltins
 	static auto constexpr CHANRECV = PatternGenerator<Instruction::CHANRECV>{};
 	static auto constexpr SPAWN = PatternGenerator<Instruction::SPAWN>{};
 	static auto constexpr YIELD = PatternGenerator<Instruction::YIELD>{};
+	static auto constexpr XYIELD = PatternGenerator<Instruction::XYIELD>{};
+	static auto constexpr XSPAWN = PatternGenerator<Instruction::XSPAWN>{};
+	static auto constexpr SPAWNSTOP = PatternGenerator<Instruction::SPAWNSTOP>{};
 	static auto constexpr CLOG = PatternGenerator<Instruction::CLOG>{};
 	static auto constexpr CREATE2 = PatternGenerator<Instruction::CREATE2>{};
 	static auto constexpr REVERT = PatternGenerator<Instruction::REVERT>{};

@@ -249,6 +249,8 @@ bool SemanticInformation::altersControlFlow(AssemblyItem const& _item)
 	case Instruction::SELFDESTRUCT:
 	case Instruction::STOP:
 	case Instruction::YIELD:
+	case Instruction::XYIELD:
+	case Instruction::SPAWNSTOP:
 	case Instruction::CHANSEND:
 	case Instruction::CHANRECV:
 	case Instruction::INVALID:

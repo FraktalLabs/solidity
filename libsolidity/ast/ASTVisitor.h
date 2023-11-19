@@ -92,6 +92,7 @@ public:
 	virtual bool visit(Throw& _node) { return visitNode(_node); }
 	virtual bool visit(EmitStatement& _node) { return visitNode(_node); }
 	virtual bool visit(SpawnStatement& _node) { return visitNode(_node); }
+	virtual bool visit(XSpawnStatement& _node) { return visitNode(_node); }
 	virtual bool visit(RevertStatement& _node) { return visitNode(_node); }
 	virtual bool visit(VariableDeclarationStatement& _node) { return visitNode(_node); }
 	virtual bool visit(ChannelReceiveStatement& _node) { return visitNode(_node); }
@@ -104,6 +105,7 @@ public:
 	virtual bool visit(BinaryOperation& _node) { return visitNode(_node); }
 	virtual bool visit(FunctionCall& _node) { return visitNode(_node); }
 	virtual bool visit(SpawnCall& _node) { return visitNode(_node); }
+	virtual bool visit(XSpawnCall& _node) { return visitNode(_node); }
 	virtual bool visit(FunctionCallOptions& _node) { return visitNode(_node); }
 	virtual bool visit(NewExpression& _node) { return visitNode(_node); }
 	virtual bool visit(MemberAccess& _node) { return visitNode(_node); }
@@ -152,6 +154,7 @@ public:
 	virtual void endVisit(Throw& _node) { endVisitNode(_node); }
 	virtual void endVisit(EmitStatement& _node) { endVisitNode(_node); }
 	virtual void endVisit(SpawnStatement& _node) { endVisitNode(_node); }
+	virtual void endVisit(XSpawnStatement& _node) { endVisitNode(_node); }
 	virtual void endVisit(RevertStatement& _node) { endVisitNode(_node); }
 	virtual void endVisit(VariableDeclarationStatement& _node) { endVisitNode(_node); }
 	virtual void endVisit(ChannelReceiveStatement& _node) { endVisitNode(_node); }
@@ -164,6 +167,7 @@ public:
 	virtual void endVisit(BinaryOperation& _node) { endVisitNode(_node); }
 	virtual void endVisit(FunctionCall& _node) { endVisitNode(_node); }
 	virtual void endVisit(SpawnCall& _node) { endVisitNode(_node); }
+	virtual void endVisit(XSpawnCall& _node) { endVisitNode(_node); }
 	virtual void endVisit(FunctionCallOptions& _node) { endVisitNode(_node); }
 	virtual void endVisit(NewExpression& _node) { endVisitNode(_node); }
 	virtual void endVisit(MemberAccess& _node) { endVisitNode(_node); }
@@ -234,6 +238,7 @@ public:
 	virtual bool visit(Throw const& _node) { return visitNode(_node); }
 	virtual bool visit(EmitStatement const& _node) { return visitNode(_node); }
 	virtual bool visit(SpawnStatement const& _node) { return visitNode(_node); }
+	virtual bool visit(XSpawnStatement const& _node) { return visitNode(_node); }
 	virtual bool visit(RevertStatement const& _node) { return visitNode(_node); }
 	virtual bool visit(VariableDeclarationStatement const& _node) { return visitNode(_node); }
 	virtual bool visit(ChannelReceiveStatement const& _node) { return visitNode(_node); }
@@ -246,6 +251,7 @@ public:
 	virtual bool visit(BinaryOperation const& _node) { return visitNode(_node); }
 	virtual bool visit(FunctionCall const& _node) { return visitNode(_node); }
 	virtual bool visit(SpawnCall const& _node) { return visitNode(_node); }
+	virtual bool visit(XSpawnCall const& _node) { return visitNode(_node); }
 	virtual bool visit(FunctionCallOptions const& _node) { return visitNode(_node); }
 	virtual bool visit(NewExpression const& _node) { return visitNode(_node); }
 	virtual bool visit(MemberAccess const& _node) { return visitNode(_node); }
@@ -294,6 +300,7 @@ public:
 	virtual void endVisit(Throw const& _node) { endVisitNode(_node); }
 	virtual void endVisit(EmitStatement const& _node) { endVisitNode(_node); }
 	virtual void endVisit(SpawnStatement const& _node) { endVisitNode(_node); }
+	virtual void endVisit(XSpawnStatement const& _node) { endVisitNode(_node); }
 	virtual void endVisit(RevertStatement const& _node) { endVisitNode(_node); }
 	virtual void endVisit(VariableDeclarationStatement const& _node) { endVisitNode(_node); }
 	virtual void endVisit(ChannelReceiveStatement const& _node) { endVisitNode(_node); }
@@ -306,6 +313,7 @@ public:
 	virtual void endVisit(BinaryOperation const& _node) { endVisitNode(_node); }
 	virtual void endVisit(FunctionCall const& _node) { endVisitNode(_node); }
 	virtual void endVisit(SpawnCall const& _node) { endVisitNode(_node); }
+	virtual void endVisit(XSpawnCall const& _node) { endVisitNode(_node); }
 	virtual void endVisit(FunctionCallOptions const& _node) { endVisitNode(_node); }
 	virtual void endVisit(NewExpression const& _node) { endVisitNode(_node); }
 	virtual void endVisit(MemberAccess const& _node) { endVisitNode(_node); }

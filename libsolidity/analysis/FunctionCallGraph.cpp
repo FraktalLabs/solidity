@@ -151,6 +151,16 @@ bool FunctionCallGraphBuilder::visit(SpawnStatement const& _spawnStatement)
 	return true;
 }
 
+bool FunctionCallGraphBuilder::visit(XSpawnStatement const& _xspawnStatement)
+{
+    auto const* functionType = dynamic_cast<FunctionType const*>(_xspawnStatement.spawnCall().expression().annotation().type);
+    solAssert(functionType, "");
+
+//TODO  m_graph..insert(&dynamic_cast<ContractDefinition const&>(functionType->declaration()));
+
+    return true;
+}
+
 bool FunctionCallGraphBuilder::visit(Identifier const& _identifier)
 {
 	if (auto const* variable = dynamic_cast<VariableDeclaration const*>(_identifier.annotation().referencedDeclaration))

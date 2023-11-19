@@ -766,6 +766,14 @@ bool ASTJsonExporter::visit(SpawnStatement const& _node)
 	return false;
 }
 
+bool ASTJsonExporter::visit(XSpawnStatement const& _node)
+{
+	setJsonNode(_node, "XSpawnStatement", {
+		make_pair("spawnCall", toJson(_node.spawnCall()))
+	});
+	return false;
+}
+
 bool ASTJsonExporter::visit(RevertStatement const& _node)
 {
 	setJsonNode(_node, "RevertStatement", {
@@ -1051,6 +1059,8 @@ string ASTJsonExporter::functionCallKind(FunctionCallKind _kind)
 	case FunctionCallKind::StructConstructorCall:
 		return "structConstructorCall";
 	case FunctionCallKind::SpawnCall:
+		return "spawnCall";
+	case FunctionCallKind::XSpawnCall:
 		return "spawnCall";
 	default:
 		solAssert(false, "Unknown kind of function call.");

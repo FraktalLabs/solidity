@@ -110,6 +110,7 @@ public:
 	bool visit(Throw const& _node) override;
 	bool visit(EmitStatement const& _node) override;
 	bool visit(SpawnStatement const& _node) override;
+	bool visit(XSpawnStatement const& _node) override;
 	bool visit(RevertStatement const& _node) override;
 	bool visit(VariableDeclarationStatement const& _node) override;
 	bool visit(ExpressionStatement const& _node) override;

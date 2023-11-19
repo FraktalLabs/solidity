@@ -1901,6 +1901,27 @@ private:
 };
 
 /**
+ * The xspawn statement is used to add a evm lvl coroutine to the queue: xspawn FuncName(arg1, ..., argn)
+ */
+class XSpawnStatement: public Statement
+{
+public:
+    explicit XSpawnStatement(
+        int64_t _id,
+        SourceLocation const& _location,
+        ASTPointer<ASTString> const& _docString,
+        ASTPointer<XSpawnCall> _functionCall
+    ):
+        Statement(_id, _location, _docString), m_spawnCall(std::move(_functionCall)) {}
+    void accept(ASTVisitor& _visitor) override;
+    void accept(ASTConstVisitor& _visitor) const override;
+
+    XSpawnCall const& spawnCall() const { return *m_spawnCall; }
+private:
+    ASTPointer<XSpawnCall> m_spawnCall;
+};
+
+/**
  * Definition of one or more variables as a statement inside a function.
  * If multiple variables are declared, a value has to be assigned directly.
  * If only a single variable is declared, the value can be missing.
@@ -2217,6 +2238,25 @@ class SpawnCall: public FunctionCall
 {
 public:
     SpawnCall(
+        int64_t _id,
+        SourceLocation const& _location,
+        ASTPointer<Expression> _expression,
+        std::vector<ASTPointer<Expression>> _arguments,
+        std::vector<ASTPointer<ASTString>> _names,
+        std::vector<SourceLocation> _nameLocations
+    ):
+		FunctionCall(_id, _location, std::move(_expression), std::move(_arguments), std::move(_names), std::move(_nameLocations))
+    {
+    }
+
+	void accept(ASTVisitor& _visitor) override;
+	void accept(ASTConstVisitor& _visitor) const override;
+};
+
+class XSpawnCall: public FunctionCall
+{
+public:
+    XSpawnCall(
         int64_t _id,
         SourceLocation const& _location,
         ASTPointer<Expression> _expression,

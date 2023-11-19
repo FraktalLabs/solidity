@@ -1314,6 +1314,16 @@ void TypeChecker::endVisit(SpawnStatement const& _spawn)
 		m_errorReporter.typeError(9292_error, _spawn.spawnCall().expression().location(), "Expression has to be a function invocation.");
 }
 
+void TypeChecker::endVisit(XSpawnStatement const& _xspawn)
+{
+	if (
+//TODO:		*_spawn.spawnCall().annotation().kind != FunctionCallKind::XSpawnCall ||
+		type(_xspawn.spawnCall().expression())->category() != Type::Category::Function ||
+		dynamic_cast<FunctionType const&>(*type(_xspawn.spawnCall().expression())).kind() != FunctionType::Kind::Internal
+	)
+		m_errorReporter.typeError(9292_error, _xspawn.spawnCall().expression().location(), "Expression has to be a function invocation.");
+}
+
 void TypeChecker::endVisit(RevertStatement const& _revert)
 {
 	FunctionCall const& errorCall = _revert.errorCall();
@@ -2708,6 +2718,13 @@ bool TypeChecker::visit(SpawnCall const& _spawnCall)
 {
 	// Use spawn call as a function call to visit function call
 	return this->visit(dynamic_cast<FunctionCall const&>(_spawnCall));
+}
+
+// TODO: Fuse with spawncall
+bool TypeChecker::visit(XSpawnCall const& _xspawnCall)
+{
+	// Use xspawn call as a function call to visit function call
+	return this->visit(dynamic_cast<FunctionCall const&>(_xspawnCall));
 }
 
 bool TypeChecker::visit(FunctionCall const& _functionCall)

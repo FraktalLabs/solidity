@@ -17,9 +17,15 @@ Forked from Solidity v0.8.18
   - TODO: xspawn this vs other
 
 2. Added Channels support to Solidity & Yul compiler(s)
+  - **Contract Level Channels**
   - Added `channel` type
   - Solidity now supports : `channel ChanName = chancreate(chanBufferSize)`, `0x42 -> ChanName`, and `uint256 val <- ChanName`
   - Yul now supports : `chanId := chancreate(chanBufSize)`, `chansend(chanId, 0x42)`, and `val := chanrecv(chanId)`
+
+  - **Call Level Coroutines**
+  - Added `xchannel` type
+  - Solidity now supports : `xchannel ChanName = xchancreate(chanBuffSize)`, `0x42 -> ChanName`, and `uint256 val <- ChanName`
+  - Yul now supports : `chanId := xchancreate(chanBufSize)`, `xchansend(chanId, 0x42)`, and `val := xchanrecv(chanId)`
 
 3. Added Console Log support to Solidity & Yul compiler(s)
   - Solidity now supports : `string memory s = "Hello, World!"; print(s);`

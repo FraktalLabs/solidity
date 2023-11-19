@@ -195,6 +195,7 @@ namespace solidity::langutil
 	K(View, "view", 0)                                                 \
 	K(Virtual, "virtual", 0)                                           \
 	K(While, "while", 0)                                               \
+	K(XSpawn, "xspawn", 0)                                             \
 	\
 	/* Ether subdenominations */                                       \
 	K(SubWei, "wei", 0)                                                \

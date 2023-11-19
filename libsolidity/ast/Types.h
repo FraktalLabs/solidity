@@ -1248,6 +1248,7 @@ public:
 		Yield, ///< yield coroutine
 		ChanCreate, ///< create channel
 		Clog, ///< console log
+		XYield, ///< yield evm lvl coroutine
 		Creation, ///< external call using CREATE
 		Send, ///< CALL, but without data and gas
 		Transfer, ///< CALL, but without data and throws on error

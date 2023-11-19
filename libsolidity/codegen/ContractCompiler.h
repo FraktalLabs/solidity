@@ -118,6 +118,7 @@ private:
 	bool visit(Throw const& _throw) override;
 	bool visit(EmitStatement const& _emit) override;
 	bool visit(SpawnStatement const& _spawn) override;
+	bool visit(XSpawnStatement const& _xspawn) override;
 	bool visit(RevertStatement const& _revert) override;
 	bool visit(VariableDeclarationStatement const& _variableDeclarationStatement) override;
 	bool visit(ChannelReceiveStatement const& _channelReceiveStatement) override;

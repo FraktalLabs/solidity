@@ -659,6 +659,101 @@ bool ExpressionCompiler::visit(SpawnCall const& _spawnCall)
 	return false;
 }
 
+bool ExpressionCompiler::visit(XSpawnCall const& _xspawnCall)
+{
+//	auto functionCallKind = *_spawnCall.annotation().kind;
+
+	CompilerContext::LocationSetter locationSetter(m_context, _xspawnCall);
+//	solAssert(functionCallKind == FunctionCallKind::XSpawnCall, "");
+
+	FunctionTypePointer functionType;
+	functionType = dynamic_cast<FunctionType const*>(_xspawnCall.expression().annotation().type);
+
+	TypePointers parameterTypes = functionType->parameterTypes();
+	vector<ASTPointer<Expression const>> const& arguments = _xspawnCall.sortedArguments();
+
+	FunctionType const& function = *functionType;
+	if (function.hasBoundFirstArgument())
+        solAssert(
+            function.kind() == FunctionType::Kind::DelegateCall ||
+            function.kind() == FunctionType::Kind::Internal ||
+            function.kind() == FunctionType::Kind::ArrayPush ||
+            function.kind() == FunctionType::Kind::ArrayPop,
+        "");
+    switch (function.kind())
+    {
+		case FunctionType::Kind::Internal:
+		{
+			//TODO: Change to how yul compiler differs from functionCall
+            // Calling convention: Caller pushes return address and arguments
+            // Callee removes them and pushes return values
+
+			evmasm::AssemblyItem stopLabel = m_context.pushNewTag();
+            for (unsigned i = 0; i < arguments.size(); ++i)
+                acceptAndConvert(*arguments[i], *function.parameterTypes()[i]);
+
+            {
+                bool shortcutTaken = false;
+                if (auto identifier = dynamic_cast<Identifier const*>(&_xspawnCall.expression()))
+                {
+                    solAssert(!function.hasBoundFirstArgument(), "");
+                    if (auto functionDef = dynamic_cast<FunctionDefinition const*>(identifier->annotation().referencedDeclaration))
+                    {
+                        // Do not directly visit the identifier, because this way, we can avoid
+                        // the runtime entry label to be created at the creation time context.
+                        CompilerContext::LocationSetter locationSetter2(m_context, *identifier);
+                        solAssert(*identifier->annotation().requiredLookup == VirtualLookup::Virtual, "");
+                        utils().pushCombinedFunctionEntryLabel(
+                            functionDef->resolveVirtual(m_context.mostDerivedContract()),
+                            false
+                        );
+                        shortcutTaken = true;
+                    }
+                }
+
+                if (!shortcutTaken)
+                    _xspawnCall.expression().accept(*this);
+            }
+
+            unsigned parameterSize = CompilerUtils::sizeOnStack(function.parameterTypes());
+            if (function.hasBoundFirstArgument())
+            {
+                // stack: arg2, ..., argn, label, arg1
+                unsigned depth = parameterSize + 1;
+                utils().moveIntoStack(depth, function.selfType()->sizeOnStack());
+                parameterSize += function.selfType()->sizeOnStack();
+            }
+
+            if (m_context.runtimeContext())
+                // We have a runtime context, so we need the creation part.
+                utils().rightShiftNumberOnStack(32);
+            else
+                // Extract the runtime part.
+                m_context << ((u256(1) << 32) - 1) << Instruction::AND;
+
+            //TODO: To spawn w/ push dest m_context.appendJump(evmasm::AssemblyItem::JumpType::IntoFunction);
+			m_context << Instruction::XSPAWN;
+			for (unsigned i = 0; i < arguments.size(); ++i)
+				m_context << Instruction::POP;
+
+			m_context << Instruction::POP;
+			evmasm::AssemblyItem postStopLabel = m_context.pushNewTag();
+			m_context.appendJump(evmasm::AssemblyItem::JumpType::Ordinary);
+            m_context << stopLabel;
+			m_context << Instruction::SPAWNSTOP;
+			m_context << postStopLabel;
+
+            //unsigned returnParametersSize = CompilerUtils::sizeOnStack(function.returnParameterTypes());
+            //// callee adds return parameters, but removes arguments and return label
+            //m_context.adjustStackOffset(static_cast<int>(returnParametersSize - parameterSize) - 1);
+            break;
+        }
+		default:
+			solAssert(false, "Invalid function kind.");
+	}
+	return false;
+}
+
 bool ExpressionCompiler::visit(FunctionCall const& _functionCall)
 {
 	auto functionCallKind = *_functionCall.annotation().kind;
@@ -930,6 +1025,10 @@ bool ExpressionCompiler::visit(FunctionCall const& _functionCall)
 		case FunctionType::Kind::Yield:
 			// TODO: asserts and checks and things
 			m_context << Instruction::YIELD;
+			break;
+		case FunctionType::Kind::XYield:
+			// TODO: asserts and checks and things
+			m_context << Instruction::XYIELD;
 			break;
 		case FunctionType::Kind::Clog:
 		{

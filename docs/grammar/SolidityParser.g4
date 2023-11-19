@@ -431,6 +431,7 @@ statement:
 	| returnStatement
 	| emitStatement
   | spawnStatement
+  | xspawnStatement
 	| revertStatement
 	| assemblyStatement
 ;
@@ -473,6 +474,10 @@ emitStatement: Emit expression callArgumentList Semicolon;
  * A spawn statement. The contained expression needs to refer to a func.
  */
 spawnStatement: Spawn expression callArgumentList Semicolon;
+/**
+ * A xspawn statement. The contained expression needs to refer to a func.
+ */
+ xspawnStatement: XSpawn expression callArgumentList Semicolon;
 /**
  * A revert statement. The contained expression needs to refer to an error.
  */

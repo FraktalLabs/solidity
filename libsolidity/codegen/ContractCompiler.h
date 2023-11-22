@@ -123,8 +123,6 @@ private:
 	bool visit(VariableDeclarationStatement const& _variableDeclarationStatement) override;
 	bool visit(ChannelReceiveStatement const& _channelReceiveStatement) override;
 	bool visit(ChannelSendStatement const& _channelSendStatement) override;
-	bool visit(XChannelReceiveStatement const& _channelReceiveStatement) override;
-	bool visit(XChannelSendStatement const& _channelSendStatement) override;
 	bool visit(ExpressionStatement const& _expressionStatement) override;
 	bool visit(PlaceholderStatement const&) override;
 	bool visit(Block const& _block) override;

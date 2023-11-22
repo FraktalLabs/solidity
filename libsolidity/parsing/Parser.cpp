@@ -1842,8 +1842,6 @@ ASTPointer<VariableDeclarationStatement> Parser::parseVariableDeclarationStateme
 		advance();
 		ASTPointer<Expression> channel = parseExpression();
 		nodeFactory.setEndPositionFromNode(channel);
-		//TODO: return X or normal based on channel type
-		if (channel->annotation().type) { std::cout << "ChannelReceiveStatement w/ " << channel->annotation().type->richIdentifier() << std::endl; }
 		return nodeFactory.createNode<ChannelReceiveStatement>(_docString, variables, channel);
 	}
 	return nodeFactory.createNode<VariableDeclarationStatement>(_docString, variables, value);
@@ -1862,8 +1860,6 @@ ASTPointer<ExpressionStatement> Parser::parseExpressionStatement(
 		ASTPointer<Expression> channel = parseExpression();
 		ASTNodeFactory nodeFactory(*this, expression);
 		nodeFactory.setEndPositionFromNode(channel);
-		//TODO: return X or normal based on channel type
-		if (channel->annotation().type) { std::cout << "ChannelSendStatement w/ " << channel->annotation().type->richIdentifier() << std::endl; }
 		return nodeFactory.createNode<ChannelSendStatement>(_docString, expression, channel);
 	}
 	return ASTNodeFactory(*this, expression).createNode<ExpressionStatement>(_docString, expression);

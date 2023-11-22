@@ -1451,58 +1451,6 @@ bool ContractCompiler::visit(ChannelSendStatement const& _channelSendStatement)
 	return false;
 }
 
-//TODO
-bool ContractCompiler::visit(XChannelReceiveStatement const& _channelReceiveStatement)
-{
-	CompilerContext::LocationSetter locationSetter(m_context, _channelReceiveStatement);
-
-	for (auto decl: _channelReceiveStatement.declarations())
-		if (decl)
-			appendStackVariableInitialisation(*decl, !_channelReceiveStatement.channel());
-
-	StackHeightChecker checker(m_context);
-	if (Expression const* channel = _channelReceiveStatement.channel())
-	{
-		CompilerUtils utils(m_context);
-		compileExpression(*channel);
-		TypePointers valueTypes;
-		if (auto tupleType = dynamic_cast<TupleType const*>(channel->annotation().type))
-			valueTypes = tupleType->components();
-		else
-			valueTypes = TypePointers{channel->annotation().type};
-
-		m_context << Instruction::XCHANRECV;
-
-		auto const& declarations = _channelReceiveStatement.declarations();
-		solAssert(declarations.size() == valueTypes.size(), "");
-		for (size_t i = 0; i < declarations.size(); ++i)
-		{
-			size_t j = declarations.size() - i - 1;
-			solAssert(!!valueTypes[j], "");
-			if (VariableDeclaration const* varDecl = declarations[j].get())
-			{
-				utils.convertType(*valueTypes[j], *varDecl->annotation().type);
-				utils.moveToStackVariable(*varDecl);
-			}
-			else
-				utils.popStackElement(*valueTypes[j]);
-		}
-	}
-	checker.check();
-	return false;
-}
-
-bool ContractCompiler::visit(XChannelSendStatement const& _channelSendStatement)
-{
-	StackHeightChecker checker(m_context);
-	CompilerContext::LocationSetter locationSetter(m_context, _channelSendStatement);
-	compileExpression(*_channelSendStatement.value());
-	compileExpression(*_channelSendStatement.channel());
-	m_context << Instruction::XCHANSEND;
-	checker.check();
-	return false;
-}
-
 bool ContractCompiler::visit(ExpressionStatement const& _expressionStatement)
 {
 	StackHeightChecker checker(m_context);

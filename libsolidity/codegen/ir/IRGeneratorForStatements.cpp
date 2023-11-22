@@ -422,28 +422,8 @@ void IRGeneratorForStatements::endVisit(ChannelSendStatement const& _statement)
 	Expression const* channel = _statement.channel();
 	Expression const* value = _statement.value();
 
+	// TODO: xchansend & recv
 	appendCode() << "chansend(" << IRVariable(*channel).commaSeparatedList() << ", " << IRVariable(*value).commaSeparatedList() << ")\n";
-}
-
-void IRGeneratorForStatements::endVisit(XChannelReceiveStatement const& _statement)
-{
-	setLocation(_statement);
-
-	Expression const* channel = _statement.channel();
-	VariableDeclaration const& varDecl = *_statement.declarations().front();
-	define(m_context.addLocalVariable(varDecl));
-
-	appendCode() << "xchanrecv(" << IRVariable(*channel).commaSeparatedList() << ")\n";
-}
-
-void IRGeneratorForStatements::endVisit(XChannelSendStatement const& _statement)
-{
-	setLocation(_statement);
-
-	Expression const* channel = _statement.channel();
-	Expression const* value = _statement.value();
-
-	appendCode() << "xchansend(" << IRVariable(*channel).commaSeparatedList() << ", " << IRVariable(*value).commaSeparatedList() << ")\n";
 }
 
 bool IRGeneratorForStatements::visit(Conditional const& _conditional)

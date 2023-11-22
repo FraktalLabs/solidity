@@ -175,7 +175,7 @@ public:
 	enum class Category
 	{
 		Address, Integer, RationalNumber, StringLiteral, Bool, FixedPoint, Array, ArraySlice,
-		FixedBytes, Contract, Struct, Function, Enum, UserDefinedValueType, Tuple, Channel,
+		FixedBytes, Contract, Struct, Function, Enum, UserDefinedValueType, Tuple, Channel, XChannel,
 		Mapping, TypeType, Modifier, Magic, Module,
 		InaccessibleDynamic
 	};
@@ -725,6 +725,29 @@ public:
 };
 
 /**
+ * The XChannel type.
+ */
+class XChannelType: public Type
+{
+public:
+	Category category() const override { return Category::XChannel; }
+	std::string richIdentifier() const override { return "t_xchannel"; }
+	TypeResult unaryOperatorResult(Token _operator) const override;
+	TypeResult binaryOperatorResult(Token _operator, Type const* _other) const override;
+
+	unsigned calldataEncodedSize(bool _padded) const override{ return _padded ? 32 : 1; }
+	unsigned storageBytes() const override { return 1; }
+	bool leftAligned() const override { return false; }
+	bool isValueType() const override { return true; }
+	bool nameable() const override { return true; }
+
+	std::string toString(bool) const override { return "xchannel"; }
+	u256 literalValue(Literal const* _literal) const override;
+	Type const* encodingType() const override { return this; }
+	TypeResult interfaceType(bool) const override { return this; }
+};
+
+/**
  * Base class for types which can be thought of as several elements of other types put together.
  * For example a struct is composed of its members, an array is composed of multiple copies of its
  * base element and a mapping is composed of its value type elements (note that keys are not
@@ -1247,6 +1270,7 @@ public:
 		BareStaticCall, ///< STATICCALL without function hash
 		Yield, ///< yield coroutine
 		ChanCreate, ///< create channel
+		XChanCreate, ///< create cross contract channel
 		Clog, ///< console log
 		XYield, ///< yield evm lvl coroutine
 		Creation, ///< external call using CREATE

@@ -648,6 +648,9 @@ void SMTEncoder::endVisit(FunctionCall const& _funCall)
 	case FunctionType::Kind::ChanCreate:
 		visitChanCreate(_funCall);
 		break;
+	case FunctionType::Kind::XChanCreate:
+		visitXChanCreate(_funCall);
+		break;
 	case FunctionType::Kind::External:
 		if (isPublicGetter(_funCall.expression()))
 			visitPublicGetter(_funCall);
@@ -902,6 +905,17 @@ void SMTEncoder::visitChanCreate(FunctionCall const& _funCall)
 	auto const& funType = dynamic_cast<FunctionType const&>(*_funCall.expression().annotation().type);
 	auto kind = funType.kind();
 	solAssert(kind == FunctionType::Kind::ChanCreate, "");
+	auto const& args = _funCall.arguments();
+	solAssert(args.at(0), "");
+//	auto arg0 = expr(*args.at(0));
+//	TODO?
+}
+
+void SMTEncoder::visitXChanCreate(FunctionCall const& _funCall)
+{
+	auto const& funType = dynamic_cast<FunctionType const&>(*_funCall.expression().annotation().type);
+	auto kind = funType.kind();
+	solAssert(kind == FunctionType::Kind::XChanCreate, "");
 	auto const& args = _funCall.arguments();
 	solAssert(args.at(0), "");
 //	auto arg0 = expr(*args.at(0));

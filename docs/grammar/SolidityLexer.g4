@@ -107,6 +107,7 @@ Using: 'using';
 View: 'view';
 Virtual: 'virtual';
 While: 'while';
+XChanCreate: 'xchancreate';
 XSPAWN: 'xspawn';
 Yield: 'yield';
 
@@ -300,7 +301,7 @@ YulEVMBuiltin:
 	| 'log0' | 'log1' | 'log2' | 'log3' | 'log4' | 'chainid' | 'origin' | 'gasprice'
 	| 'blockhash' | 'coinbase' | 'timestamp' | 'number' | 'difficulty' | 'prevrandao'
 	| 'gaslimit' | 'basefee' | 'yield' | 'spawn' | 'chancreate', 'chansend', 'chanrecv'
-  | 'clog' | 'xspawn' | 'xyield';
+  | 'clog' | 'xspawn' | 'xyield' | 'xchancreate' | 'xchansend' | 'xchanrecv';
 
 YulLBrace: '{' -> pushMode(YulMode);
 YulRBrace: '}' -> popMode;

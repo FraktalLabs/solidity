@@ -253,6 +253,8 @@ bool SemanticInformation::altersControlFlow(AssemblyItem const& _item)
 	case Instruction::SPAWNSTOP:
 	case Instruction::CHANSEND:
 	case Instruction::CHANRECV:
+	case Instruction::XCHANSEND:
+	case Instruction::XCHANRECV:
 	case Instruction::INVALID:
 	case Instruction::REVERT:
 		return true;

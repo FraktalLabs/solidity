@@ -1047,6 +1047,11 @@ bool ExpressionCompiler::visit(FunctionCall const& _functionCall)
 			arguments.front()->accept(*this);
 			m_context << Instruction::CHANCREATE;
 			break;
+		case FunctionType::Kind::XChanCreate:
+			solAssert(arguments.size() == 1, "");
+			arguments.front()->accept(*this);
+			m_context << Instruction::XCHANCREATE;
+			break;
 		case FunctionType::Kind::Revert:
 		{
 			if (arguments.empty())

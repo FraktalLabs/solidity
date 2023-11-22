@@ -179,6 +179,9 @@ enum class Instruction: uint8_t
 	XYIELD,             ///< Yield execution to next cross contract coroutine in queue ( adds current coroutine to end of queue )
 	XSPAWN,             ///< Spawn cross contract coroutine ( adds coroutine to end of queue )
 	SPAWNSTOP,          ///< Stop current evm lvl coroutine ( stops execution of spawned coroutine )
+	XCHANCREATE,        ///< Create cross contract coroutine channel
+	XCHANSEND,          ///< Send message to cross contract coroutine channel
+	XCHANRECV,          ///< Receive message from cross contract coroutine channel
 
 	CREATE = 0xf0,		///< create a new account with associated code
 	CALL,				///< message-call into an account

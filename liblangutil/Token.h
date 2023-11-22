@@ -215,6 +215,7 @@ namespace solidity::langutil
 	K(Address, "address", 0)                                           \
 	K(Bool, "bool", 0)                                                 \
 	K(Channel, "channel", 0)                                           \
+	K(XChannel, "xchannel", 0)                                          \
 	K(Fixed, "fixed", 0)                                               \
 	K(UFixed, "ufixed", 0)                                             \
 	T(IntM, "intM", 0)                                                 \

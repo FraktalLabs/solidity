@@ -42,6 +42,7 @@ AddressType const TypeProvider::m_payableAddress{StateMutability::Payable};
 AddressType const TypeProvider::m_address{StateMutability::NonPayable};
 
 ChannelType const TypeProvider::m_channel{};
+XChannelType const TypeProvider::m_xchannel{};
 
 array<unique_ptr<IntegerType>, 32> const TypeProvider::m_intM{{
 	{make_unique<IntegerType>(8 * 1, IntegerType::Modifier::Signed)},
@@ -251,6 +252,8 @@ Type const* TypeProvider::fromElementaryTypeName(ElementaryTypeNameToken const& 
 		return boolean();
 	case Token::Channel:
 		return channel();
+	case Token::XChannel:
+		return xchannel();
 	case Token::Bytes:
 		return bytesStorage();
 	case Token::String:

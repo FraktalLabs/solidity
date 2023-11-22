@@ -377,6 +377,9 @@ u256 EVMInstructionInterpreter::eval(
 	case Instruction::CHANCREATE:
 	case Instruction::CHANSEND:
 	case Instruction::CHANRECV:
+	case Instruction::XCHANCREATE:
+	case Instruction::XCHANSEND:
+	case Instruction::XCHANRECV:
 	case Instruction::YIELD:
 	case Instruction::SPAWN:
 	case Instruction::XYIELD:

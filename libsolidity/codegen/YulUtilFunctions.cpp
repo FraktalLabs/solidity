@@ -297,6 +297,9 @@ string YulUtilFunctions::leftAlignFunction(Type const& _type)
 		case Type::Category::Channel:
 			templ("body", "aligned := " + leftAlignFunction(IntegerType(8)) + "(value)");
 			break;
+		case Type::Category::XChannel:
+			templ("body", "aligned := " + leftAlignFunction(IntegerType(8)) + "(value)");
+			break;
 		case Type::Category::FixedPoint:
 			solUnimplemented("Fixed point types not implemented.");
 			break;
@@ -3424,6 +3427,15 @@ string YulUtilFunctions::conversionFunction(Type const& _from, Type const& _to)
                   .render();
 			break;
 		}
+		case Type::Category::XChannel:
+		{
+			solAssert(_from == _to, "Invalid conversion for xchannel.");
+              body =
+                  Whiskers("converted := <clean>(value)")
+                  ("clean", cleanupFunction(_from))
+                  .render();
+			break;
+		}
 		case Type::Category::FixedPoint:
 			solUnimplemented("Fixed point types not implemented.");
 			break;
@@ -3831,6 +3843,9 @@ string YulUtilFunctions::cleanupFunction(Type const& _type)
 		case Type::Category::Channel:
 			templ("body", "cleaned := value");
 			break;
+		case Type::Category::XChannel:
+			templ("body", "cleaned := value");
+			break;
 		case Type::Category::FixedPoint:
 			solUnimplemented("Fixed point types not implemented.");
 			break;
@@ -3915,6 +3930,7 @@ string YulUtilFunctions::validatorFunction(Type const& _type, bool _revertOnFail
 		case Type::Category::RationalNumber:
 		case Type::Category::Bool:
 		case Type::Category::Channel:
+		case Type::Category::XChannel:
 		case Type::Category::FixedPoint:
 		case Type::Category::Function:
 		case Type::Category::Array:

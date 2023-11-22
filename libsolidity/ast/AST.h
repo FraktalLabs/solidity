@@ -1972,6 +1972,22 @@ public:
 	Expression const* channel() const { return m_initialValue.get(); }
 };
 
+class XChannelReceiveStatement: public VariableDeclarationStatement
+{
+public:
+	XChannelReceiveStatement(
+		int64_t _id,
+		SourceLocation const& _location,
+		ASTPointer<ASTString> const& _docString,
+		std::vector<ASTPointer<VariableDeclaration>> _variables,
+		ASTPointer<Expression> _channel
+	):
+		VariableDeclarationStatement(_id, _location, _docString, std::move(_variables), std::move(_channel)) {}
+	void accept(ASTVisitor& _visitor) override;
+	void accept(ASTConstVisitor& _visitor) const override;
+	Expression const* channel() const { return m_initialValue.get(); }
+};
+
 /**
  * A statement that contains only an expression (i.e. an assignment, function call, ...).
  */
@@ -1998,6 +2014,28 @@ class ChannelSendStatement: public ExpressionStatement
 {
 public:
 	ChannelSendStatement(
+		int64_t _id,
+		SourceLocation const& _location,
+		ASTPointer<ASTString> const& _docString,
+		ASTPointer<Expression> _expression, //TODO: just use _value?
+		ASTPointer<Expression> _channel
+	):
+		ExpressionStatement(_id, _location, _docString, std::move(_expression)),
+		m_channel(std::move(_channel)) {}
+	void accept(ASTVisitor& _visitor) override;
+	void accept(ASTConstVisitor& _visitor) const override;
+
+	Expression const* channel() const { return m_channel.get(); }
+	Expression const* value() const { return m_expression.get(); }
+
+private:
+	ASTPointer<Expression> m_channel;
+};
+
+class XChannelSendStatement: public ExpressionStatement
+{
+public:
+	XChannelSendStatement(
 		int64_t _id,
 		SourceLocation const& _location,
 		ASTPointer<ASTString> const& _docString,

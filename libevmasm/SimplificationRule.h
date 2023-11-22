@@ -150,6 +150,9 @@ struct EVMBuiltins
 	static auto constexpr CHANCREATE = PatternGenerator<Instruction::CHANCREATE>{};
 	static auto constexpr CHANSEND = PatternGenerator<Instruction::CHANSEND>{};
 	static auto constexpr CHANRECV = PatternGenerator<Instruction::CHANRECV>{};
+	static auto constexpr XCHANCREATE = PatternGenerator<Instruction::XCHANCREATE>{};
+	static auto constexpr XCHANSEND = PatternGenerator<Instruction::XCHANSEND>{};
+	static auto constexpr XCHANRECV = PatternGenerator<Instruction::XCHANRECV>{};
 	static auto constexpr SPAWN = PatternGenerator<Instruction::SPAWN>{};
 	static auto constexpr YIELD = PatternGenerator<Instruction::YIELD>{};
 	static auto constexpr XYIELD = PatternGenerator<Instruction::XYIELD>{};

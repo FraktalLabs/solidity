@@ -170,6 +170,9 @@ std::map<std::string, Instruction> const solidity::evmasm::c_instructions =
 	{ "CHANCREATE", Instruction::CHANCREATE },
 	{ "CHANSEND", Instruction::CHANSEND },
 	{ "CHANRECV", Instruction::CHANRECV },
+	{ "XCHANCREATE", Instruction::XCHANCREATE },
+	{ "XCHANSEND", Instruction::XCHANSEND },
+	{ "XCHANRECV", Instruction::XCHANRECV },
 	{ "SPAWN", Instruction::SPAWN },
 	{ "YIELD", Instruction::YIELD },
 	{ "XYIELD", Instruction::XYIELD },
@@ -329,6 +332,9 @@ static std::map<Instruction, InstructionInfo> const c_instructionInfo =
 	{ Instruction::CHANCREATE,  { "CHANCREATE",     0, 1, 1, true, Tier::VeryLow } }, // TODO: Gas, and side effect
 	{ Instruction::CHANSEND,    { "CHANSEND",       0, 2, 0, true, Tier::VeryLow } }, // TODO
     { Instruction::CHANRECV,    { "CHANRECV",       0, 1, 1, true, Tier::VeryLow } }, // TODO
+	{ Instruction::XCHANCREATE,  { "XCHANCREATE",     0, 1, 1, true, Tier::VeryLow } }, // TODO: Gas, and side effect
+	{ Instruction::XCHANSEND,    { "XCHANSEND",       0, 2, 0, true, Tier::VeryLow } }, // TODO
+    { Instruction::XCHANRECV,    { "XCHANRECV",       0, 1, 1, true, Tier::VeryLow } }, // TODO
 	{ Instruction::SPAWN,       { "SPAWN",          0, 1, 0, true, Tier::VeryLow } }, // TODO: Gase, Side effect
 	{ Instruction::XSPAWN,      { "XSPAWN",          0, 1, 0, true, Tier::VeryLow } }, // TODO: Gase, Side effect
 	{ Instruction::SPAWNSTOP,       { "SPAWNSTOP",          0, 0, 0, true, Tier::VeryLow } }, // TODO: Gas & SideEffects

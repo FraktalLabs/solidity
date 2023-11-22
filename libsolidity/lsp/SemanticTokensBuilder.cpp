@@ -43,6 +43,7 @@ optional<SemanticTokenType> semanticTokenTypeForType(frontend::Type const* _type
 	case frontend::Type::Category::Address: return SemanticTokenType::Class;
 	case frontend::Type::Category::Bool: return SemanticTokenType::Number;
 	case frontend::Type::Category::Channel: return SemanticTokenType::Number;
+	case frontend::Type::Category::XChannel: return SemanticTokenType::Number;
 	case frontend::Type::Category::Enum: return SemanticTokenType::Enum;
 	case frontend::Type::Category::Function: return SemanticTokenType::Function;
 	case frontend::Type::Category::Integer: return SemanticTokenType::Number;

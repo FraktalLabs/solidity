@@ -1373,6 +1373,19 @@ bool TypeChecker::visit(ChannelReceiveStatement const& _statement)
 	return false;
 }
 
+bool TypeChecker::visit(XChannelReceiveStatement const& _statement)
+{
+	if (!_statement.channel())
+	{
+		m_errorReporter.typeError(1234_error, _statement.location(), "Channel receive statement without channel.");
+		return false;
+	}
+
+	_statement.channel()->accept(*this);
+
+	return false;
+}
+
 bool TypeChecker::visit(VariableDeclarationStatement const& _statement)
 {
 	if (!_statement.initialValue())
@@ -1522,6 +1535,14 @@ bool TypeChecker::visit(ChannelSendStatement const& _statement)
 	//_statement.annotation().type = type(_expression.value());
 	//_statement.annotation().isPure = false; // type(_expression.value())->isPure();
 	//_statement.annotation().isLValue = false; // type(_expression.value())->isLValue();
+
+	return false;
+}
+
+bool TypeChecker::visit(XChannelSendStatement const& _statement)
+{
+	_statement.value()->accept(*this);
+	_statement.channel()->accept(*this);
 
 	return false;
 }

@@ -1295,6 +1295,9 @@ void CompilerUtils::convertType(
 	case Type::Category::Channel:
 	    //TODO: Channel
 		break;
+	case Type::Category::XChannel:
+	    //TODO: Channel
+		break;
 	default:
 		// we used to allow conversions from function to address
 		solAssert(!(stackTypeCategory == Type::Category::Function && targetTypeCategory == Type::Category::Address));

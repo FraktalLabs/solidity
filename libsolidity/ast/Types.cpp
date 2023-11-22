@@ -1438,6 +1438,33 @@ TypeResult ChannelType::binaryOperatorResult(Token _operator, Type const* _other
 		return nullptr;
 }
 
+u256 XChannelType::literalValue(Literal const* _literal) const
+{
+	solAssert(_literal, "");
+	return u256(_literal->valueWithoutUnderscores());
+}
+
+TypeResult XChannelType::unaryOperatorResult(Token _operator) const
+{
+	//TODO: things
+	if (_operator == Token::Delete)
+		return TypeProvider::emptyTuple();
+	else if (_operator == Token::Not)
+		return this;
+	else
+		return nullptr;
+}
+
+TypeResult XChannelType::binaryOperatorResult(Token _operator, Type const* _other) const
+{
+	if (category() != _other->category())
+		return nullptr;
+	if (_operator == Token::Equal || _operator == Token::NotEqual || _operator == Token::And || _operator == Token::Or)
+		return _other;
+	else
+		return nullptr;
+}
+
 Type const* ContractType::encodingType() const
 {
 	if (isSuper())
@@ -3036,6 +3063,7 @@ string FunctionType::richIdentifier() const
 	case Kind::Yield: id += "yield"; break;
 	case Kind::XYield: id += "xyield"; break;
 	case Kind::ChanCreate: id += "chancreate"; break;
+	case Kind::XChanCreate: id += "xchancreate"; break;
 	case Kind::Clog: id += "print"; break;
 	case Kind::Creation: id += "creation"; break;
 	case Kind::Send: id += "send"; break;

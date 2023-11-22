@@ -63,6 +63,7 @@ public:
 	/// @returns boolean type.
 	static BoolType const* boolean() noexcept { return &m_boolean; }
 	static ChannelType const* channel() noexcept { return &m_channel; }
+	static XChannelType const* xchannel() noexcept { return &m_xchannel; }
 
 	static FixedBytesType const* byte() { return fixedBytes(1); }
 	static FixedBytesType const* fixedBytes(unsigned m) { return m_bytesM.at(m - 1).get(); }
@@ -215,6 +216,7 @@ private:
 	static InaccessibleDynamicType const m_inaccessibleDynamic;
 
 	static ChannelType const m_channel;
+	static XChannelType const m_xchannel;
 
 	/// These are lazy-initialized because they depend on `byte` being available.
 	static std::unique_ptr<ArrayType> m_bytesStorage;

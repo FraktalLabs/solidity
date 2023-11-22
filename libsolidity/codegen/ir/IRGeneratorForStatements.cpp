@@ -425,6 +425,27 @@ void IRGeneratorForStatements::endVisit(ChannelSendStatement const& _statement)
 	appendCode() << "chansend(" << IRVariable(*channel).commaSeparatedList() << ", " << IRVariable(*value).commaSeparatedList() << ")\n";
 }
 
+void IRGeneratorForStatements::endVisit(XChannelReceiveStatement const& _statement)
+{
+	setLocation(_statement);
+
+	Expression const* channel = _statement.channel();
+	VariableDeclaration const& varDecl = *_statement.declarations().front();
+	define(m_context.addLocalVariable(varDecl));
+
+	appendCode() << "xchanrecv(" << IRVariable(*channel).commaSeparatedList() << ")\n";
+}
+
+void IRGeneratorForStatements::endVisit(XChannelSendStatement const& _statement)
+{
+	setLocation(_statement);
+
+	Expression const* channel = _statement.channel();
+	Expression const* value = _statement.value();
+
+	appendCode() << "xchansend(" << IRVariable(*channel).commaSeparatedList() << ", " << IRVariable(*value).commaSeparatedList() << ")\n";
+}
+
 bool IRGeneratorForStatements::visit(Conditional const& _conditional)
 {
 	_conditional.condition().accept(*this);
@@ -1262,6 +1283,14 @@ void IRGeneratorForStatements::endVisit(FunctionCall const& _functionCall)
 		// TODO: sol asserts
 		string const yulChannelVar = IRVariable(_functionCall).name();
 		appendCode() << "let " << yulChannelVar << " := chancreate("
+			<< IRVariable(*arguments[0]).commaSeparatedList() << ")\n";
+		break;
+	}
+	case FunctionType::Kind::XChanCreate:
+	{
+		// TODO: sol asserts
+		string const yulChannelVar = IRVariable(_functionCall).name();
+		appendCode() << "let " << yulChannelVar << " := xchancreate("
 			<< IRVariable(*arguments[0]).commaSeparatedList() << ")\n";
 		break;
 	}

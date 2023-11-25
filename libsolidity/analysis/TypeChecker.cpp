@@ -1324,6 +1324,16 @@ void TypeChecker::endVisit(XSpawnStatement const& _xspawn)
 		m_errorReporter.typeError(9292_error, _xspawn.spawnCall().expression().location(), "Expression has to be a function invocation.");
 }
 
+void TypeChecker::endVisit(XSpawnCallStatement const& _xspawn)
+{
+	if (
+//TODO:		*_spawn.spawnCall().annotation().kind != FunctionCallKind::XSpawnCall ||
+		type(_xspawn.spawnCall().expression())->category() != Type::Category::Function ||
+		dynamic_cast<FunctionType const&>(*type(_xspawn.spawnCall().expression())).kind() != FunctionType::Kind::External // TODO: External stuff from call?
+	)
+		m_errorReporter.typeError(9292_error, _xspawn.spawnCall().expression().location(), "Expression has to be a function invocation.");
+}
+
 void TypeChecker::endVisit(RevertStatement const& _revert)
 {
 	FunctionCall const& errorCall = _revert.errorCall();

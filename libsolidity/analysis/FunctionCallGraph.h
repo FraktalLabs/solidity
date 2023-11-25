@@ -72,6 +72,7 @@ private:
 	bool visit(EmitStatement const& _emitStatement) override;
 	bool visit(SpawnStatement const& _spawnStatement) override;
 	bool visit(XSpawnStatement const& _xspawnStatement) override;
+	bool visit(XSpawnCallStatement const& _xspawnStatement) override;
 	bool visit(Identifier const& _identifier) override;
 	bool visit(MemberAccess const& _memberAccess) override;
 	bool visit(ModifierInvocation const& _modifierInvocation) override;

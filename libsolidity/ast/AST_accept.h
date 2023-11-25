@@ -768,6 +768,22 @@ void XSpawnStatement::accept(ASTConstVisitor& _visitor) const
 	_visitor.endVisit(*this);
 }
 
+void XSpawnCallStatement::accept(ASTVisitor& _visitor)
+{
+	if (_visitor.visit(*this)) {
+		m_spawnCall->accept(_visitor);
+	}
+	_visitor.endVisit(*this);
+}
+
+void XSpawnCallStatement::accept(ASTConstVisitor& _visitor) const
+{
+	if (_visitor.visit(*this)) {
+		m_spawnCall->accept(_visitor);
+	}
+	_visitor.endVisit(*this);
+}
+
 void ExpressionStatement::accept(ASTVisitor& _visitor)
 {
 	if (_visitor.visit(*this))

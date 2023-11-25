@@ -1922,6 +1922,27 @@ private:
 };
 
 /**
+ * The xspawncall statement is used to add a evm lvl coroutine to the queue: xspawncall ContractName.FuncName(arg1, ..., argn)
+ */
+class XSpawnCallStatement: public Statement
+{
+public:
+    explicit XSpawnCallStatement(
+        int64_t _id,
+        SourceLocation const& _location,
+        ASTPointer<ASTString> const& _docString,
+        ASTPointer<XSpawnCall> _functionCall
+    ):
+        Statement(_id, _location, _docString), m_spawnCall(std::move(_functionCall)) {}
+    void accept(ASTVisitor& _visitor) override;
+    void accept(ASTConstVisitor& _visitor) const override;
+
+    XSpawnCall const& spawnCall() const { return *m_spawnCall; }
+private:
+    ASTPointer<XSpawnCall> m_spawnCall;
+};
+
+/**
  * Definition of one or more variables as a statement inside a function.
  * If multiple variables are declared, a value has to be assigned directly.
  * If only a single variable is declared, the value can be missing.

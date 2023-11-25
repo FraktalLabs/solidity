@@ -769,7 +769,15 @@ bool ASTJsonExporter::visit(SpawnStatement const& _node)
 bool ASTJsonExporter::visit(XSpawnStatement const& _node)
 {
 	setJsonNode(_node, "XSpawnStatement", {
-		make_pair("spawnCall", toJson(_node.spawnCall()))
+		make_pair("spawnCall", toJson(_node.spawnCall())) //TODO: xspawn?
+	});
+	return false;
+}
+
+bool ASTJsonExporter::visit(XSpawnCallStatement const& _node)
+{
+	setJsonNode(_node, "XSpawnCallStatement", {
+		make_pair("xspawnCall", toJson(_node.spawnCall()))
 	});
 	return false;
 }

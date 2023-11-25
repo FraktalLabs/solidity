@@ -454,6 +454,12 @@ vector<YulString> AsmAnalyzer::operator()(FunctionCall const& _funCall)
 	if (watcher.ok())
 	{
 		yulAssert(parameterTypes && parameterTypes->size() == argTypes.size(), "");
+		//TODO: I dont like this...
+		//TODO: Allow returning value to caller to process there?
+		if (_funCall.functionName.name.str() == "xspawncall") {
+			vector<YulString> emptyRet = {};
+			return emptyRet;
+		}
 		yulAssert(returnTypes, "");
 		return *returnTypes;
 	}

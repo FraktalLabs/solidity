@@ -150,6 +150,7 @@ private:
 	bool visit(XSpawnCall const& _xspawn) override;
 	void endVisit(SpawnStatement const& _spawn) override;
 	void endVisit(XSpawnStatement const& _xspawn) override;
+	void endVisit(XSpawnCallStatement const& _xspawn) override;
 	void endVisit(RevertStatement const& _revert) override;
 	bool visit(VariableDeclarationStatement const& _variable) override;
 	bool visit(ChannelReceiveStatement const& _variable) override;

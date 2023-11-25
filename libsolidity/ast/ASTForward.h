@@ -83,6 +83,7 @@ class Throw;
 class EmitStatement;
 class SpawnStatement;
 class XSpawnStatement;
+class XSpawnCallStatement;
 class VariableDeclarationStatement;
 class ExpressionStatement;
 class Expression;

@@ -87,6 +87,8 @@ private:
 	void endVisit(SpawnStatement const& _spawn) override;
 	bool visit(XSpawnStatement const& _xspawn) override;
 	void endVisit(XSpawnStatement const& _xspawn) override;
+	bool visit(XSpawnCallStatement const& _xspawn) override;
+	void endVisit(XSpawnCallStatement const& _xspawn) override;
 
 	bool visit(RevertStatement const& _revert) override;
 	void endVisit(RevertStatement const& _revert) override;

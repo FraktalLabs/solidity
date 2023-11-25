@@ -221,6 +221,8 @@ ASTPointer<ASTNode> ASTJsonImporter::convertJsonToASTNode(Json::Value const& _js
 		return createSpawnStatement(_json);
 	if (nodeType == "XSpawnStatement")
 		return createXSpawnStatement(_json);
+	if (nodeType == "XSpawnCallStatement")
+		return createXSpawnCallStatement(_json);
 	if (nodeType == "RevertStatement")
 		return createRevertStatement(_json);
 	if (nodeType == "Throw")
@@ -854,6 +856,15 @@ ASTPointer<XSpawnStatement> ASTJsonImporter::createXSpawnStatement(Json::Value c
 		_node,
 		nullOrASTString(_node, "documentation"),
 		createXSpawnCall(member(_node, "spawnCall"))
+	);
+}
+
+ASTPointer<XSpawnCallStatement> ASTJsonImporter::createXSpawnCallStatement(Json::Value const&  _node)
+{
+	return createASTNode<XSpawnCallStatement>(
+		_node,
+		nullOrASTString(_node, "documentation"),
+		createXSpawnCall(member(_node, "xspawnCall"))
 	);
 }
 

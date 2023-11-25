@@ -385,6 +385,7 @@ u256 EVMInstructionInterpreter::eval(
 	case Instruction::XYIELD:
 	case Instruction::XSPAWN:
 	case Instruction::SPAWNSTOP:
+	case Instruction::XSPAWNCALL:
 	case Instruction::CLOG:
 	case Instruction::JUMP:
 	case Instruction::JUMPI:

@@ -115,6 +115,7 @@ private:
 	ASTPointer<EmitStatement> createEmitStatement(Json::Value const& _node);
 	ASTPointer<SpawnStatement> createSpawnStatement(Json::Value const& _node);
 	ASTPointer<XSpawnStatement> createXSpawnStatement(Json::Value const& _node);
+	ASTPointer<XSpawnCallStatement> createXSpawnCallStatement(Json::Value const& _node);
 	ASTPointer<RevertStatement> createRevertStatement(Json::Value const& _node);
 	ASTPointer<VariableDeclarationStatement> createVariableDeclarationStatement(Json::Value const& _node);
 	ASTPointer<ExpressionStatement> createExpressionStatement(Json::Value const& _node);

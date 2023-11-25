@@ -312,6 +312,31 @@ void CodeTransform::operator()(FunctionCall const& _call)
 		  m_assembly.appendLabel(stopLabel);
 		  m_assembly.appendInstruction(evmasm::Instruction::SPAWNSTOP);
 		  m_assembly.appendLabel(postStopLabel);
+			//TODO: xspawncall?
+		} else if(_call.functionName.name.str() == "xspawncall") { // TODO: ??
+		  //for (auto&& [i, arg]: _call.arguments | ranges::views::enumerate | ranges::views::reverse)
+		  //	if (!builtin->literalArgument(i))
+		  //		visitExpression(arg);
+		  //m_assembly.setSourceLocation(originLocationOf(_call));
+		  //builtin->generateCode(_call, m_assembly, m_builtinContext);
+		  for (auto&& [i, arg]: _call.arguments | ranges::views::enumerate | ranges::views::reverse)
+		  	if (!builtin->literalArgument(i))
+		  		visitExpression(arg);
+          //for (auto const& arg: get<FunctionCall>(_call.arguments[0]).arguments | ranges::views::reverse)
+          //    visitExpression(arg);
+
+         // m_assembly.setSourceLocation(originLocationOf(get<FunctionCall>(_call.arguments[0])));
+		  m_assembly.setSourceLocation(originLocationOf(_call));
+		  m_assembly.appendInstruction(evmasm::Instruction::XSPAWNCALL);
+
+		  // TODO: move things to generate code
+		  m_assembly.appendInstruction(evmasm::Instruction::ISZERO);
+		  AbstractAssembly::LabelID postStopLabel = m_assembly.newLabelId();
+		  m_assembly.appendLabelReference(postStopLabel);
+		  m_assembly.appendInstruction(evmasm::Instruction::JUMPI);
+
+		  m_assembly.appendInstruction(evmasm::Instruction::SPAWNSTOP);
+		  m_assembly.appendLabel(postStopLabel);
 		} else {
 		  for (auto&& [i, arg]: _call.arguments | ranges::views::enumerate | ranges::views::reverse)
 		  	if (!builtin->literalArgument(i))

@@ -748,6 +748,15 @@ bool ExpressionCompiler::visit(XSpawnCall const& _xspawnCall)
             //m_context.adjustStackOffset(static_cast<int>(returnParametersSize - parameterSize) - 1);
             break;
         }
+		case FunctionType::Kind::External:
+		{
+		    //TODO: Other things from functioncall func?
+			solAssert(!_xspawnCall.annotation().tryCall, "");
+            _xspawnCall.expression().accept(*this);
+            spawnExternalFunctionCall(function, arguments, _xspawnCall.annotation().tryCall);
+
+			break;
+		}
 		default:
 			solAssert(false, "Invalid function kind.");
 	}
@@ -2782,6 +2791,316 @@ void ExpressionCompiler::appendExpOperatorCode(Type const& _valueType, Type cons
 	else
 		m_context << Instruction::EXP;
 }
+
+void ExpressionCompiler::spawnExternalFunctionCall(
+	FunctionType const& _functionType,
+	vector<ASTPointer<Expression const>> const& _arguments,
+	bool _tryCall
+)
+{
+	solAssert(
+		_functionType.takesArbitraryParameters() ||
+		_arguments.size() == _functionType.parameterTypes().size(), ""
+	);
+
+	// Assumed stack content here:
+	// <stack top>
+	// value [if _functionType.valueSet()]
+	// gas [if _functionType.gasSet()]
+	// self object [if bound - moved to top right away]
+	// function identifier [unless bare]
+	// contract address
+
+	unsigned selfSize = _functionType.hasBoundFirstArgument() ? _functionType.selfType()->sizeOnStack() : 0;
+	unsigned gasValueSize = (_functionType.gasSet() ? 1u : 0u) + (_functionType.valueSet() ? 1u : 0u);
+	unsigned contractStackPos = m_context.currentToBaseStackOffset(1 + gasValueSize + selfSize + (_functionType.isBareCall() ? 0 : 1));
+	unsigned gasStackPos = m_context.currentToBaseStackOffset(gasValueSize);
+	unsigned valueStackPos = m_context.currentToBaseStackOffset(1);
+
+	// move self object to top
+	if (_functionType.hasBoundFirstArgument())
+		utils().moveToStackTop(gasValueSize, _functionType.selfType()->sizeOnStack());
+
+	auto funKind = _functionType.kind();
+
+	solAssert(funKind != FunctionType::Kind::BareStaticCall || m_context.evmVersion().hasStaticCall(), "");
+
+	solAssert(funKind != FunctionType::Kind::BareCallCode, "Callcode has been removed.");
+
+	bool returnSuccessConditionAndReturndata = funKind == FunctionType::Kind::BareCall || funKind == FunctionType::Kind::BareDelegateCall || funKind == FunctionType::Kind::BareStaticCall;
+	bool isDelegateCall = funKind == FunctionType::Kind::BareDelegateCall || funKind == FunctionType::Kind::DelegateCall;
+	bool useStaticCall = funKind == FunctionType::Kind::BareStaticCall || (_functionType.stateMutability() <= StateMutability::View && m_context.evmVersion().hasStaticCall());
+
+	if (_tryCall)
+	{
+		solAssert(!returnSuccessConditionAndReturndata, "");
+		solAssert(!_functionType.isBareCall(), "");
+	}
+
+	ReturnInfo const returnInfo{m_context.evmVersion(), _functionType};
+	bool const haveReturndatacopy = m_context.evmVersion().supportsReturndata();
+	unsigned const retSize = returnInfo.estimatedReturnSize;
+	bool const dynamicReturnSize = returnInfo.dynamicReturnSize;
+	TypePointers const& returnTypes = returnInfo.returnTypes;
+
+	// Evaluate arguments.
+	TypePointers argumentTypes;
+	TypePointers parameterTypes = _functionType.parameterTypes();
+	if (_functionType.hasBoundFirstArgument())
+	{
+		argumentTypes.push_back(_functionType.selfType());
+		parameterTypes.insert(parameterTypes.begin(), _functionType.selfType());
+	}
+	for (size_t i = 0; i < _arguments.size(); ++i)
+	{
+		_arguments[i]->accept(*this);
+		argumentTypes.push_back(_arguments[i]->annotation().type);
+	}
+
+	if (funKind == FunctionType::Kind::ECRecover)
+	{
+		// Clears 32 bytes of currently free memory and advances free memory pointer.
+		// Output area will be "start of input area" - 32.
+		// The reason is that a failing ECRecover cannot be detected, it will just return
+		// zero bytes (which we cannot detect).
+		solAssert(0 < retSize && retSize <= 32, "");
+		utils().fetchFreeMemoryPointer();
+		m_context << u256(0) << Instruction::DUP2 << Instruction::MSTORE;
+		m_context << u256(32) << Instruction::ADD;
+		utils().storeFreeMemoryPointer();
+	}
+
+	if (!m_context.evmVersion().canOverchargeGasForCall())
+	{
+		// Touch the end of the output area so that we do not pay for memory resize during the call
+		// (which we would have to subtract from the gas left)
+		// We could also just use MLOAD; POP right before the gas calculation, but the optimizer
+		// would remove that, so we use MSTORE here.
+		if (!_functionType.gasSet() && retSize > 0)
+		{
+			m_context << u256(0);
+			utils().fetchFreeMemoryPointer();
+			// This touches too much, but that way we save some rounding arithmetic
+			m_context << u256(retSize) << Instruction::ADD << Instruction::MSTORE;
+		}
+	}
+
+	// Copy function identifier to memory.
+	utils().fetchFreeMemoryPointer();
+	if (!_functionType.isBareCall())
+	{
+		m_context << dupInstruction(2 + gasValueSize + CompilerUtils::sizeOnStack(argumentTypes));
+		utils().storeInMemoryDynamic(IntegerType(8 * CompilerUtils::dataStartOffset), false);
+	}
+
+	// If the function takes arbitrary parameters or is a bare call, copy dynamic length data in place.
+	// Move arguments to memory, will not update the free memory pointer (but will update the memory
+	// pointer on the stack).
+	bool encodeInPlace = _functionType.takesArbitraryParameters() || _functionType.isBareCall();
+	if (_functionType.kind() == FunctionType::Kind::ECRecover)
+		// This would be the only combination of padding and in-place encoding,
+		// but all parameters of ecrecover are value types anyway.
+		encodeInPlace = false;
+	bool encodeForLibraryCall = funKind == FunctionType::Kind::DelegateCall;
+	utils().encodeToMemory(
+		argumentTypes,
+		parameterTypes,
+		_functionType.padArguments(),
+		encodeInPlace,
+		encodeForLibraryCall
+	);
+
+	// Stack now:
+	// <stack top>
+	// input_memory_end
+	// value [if _functionType.valueSet()]
+	// gas [if _functionType.gasSet()]
+	// function identifier [unless bare]
+	// contract address
+
+	// Output data will replace input data, unless we have ECRecover (then, output
+	// area will be 32 bytes just before input area).
+	// put on stack: <size of output> <memory pos of output> <size of input> <memory pos of input>
+	m_context << u256(retSize);
+	utils().fetchFreeMemoryPointer(); // This is the start of input
+	if (funKind == FunctionType::Kind::ECRecover)
+	{
+		// In this case, output is 32 bytes before input and has already been cleared.
+		m_context << u256(32) << Instruction::DUP2 << Instruction::SUB << Instruction::SWAP1;
+		// Here: <input end> <output size> <outpos> <input pos>
+		m_context << Instruction::DUP1 << Instruction::DUP5 << Instruction::SUB;
+		m_context << Instruction::SWAP1;
+	}
+	else
+	{
+		m_context << Instruction::DUP1 << Instruction::DUP4 << Instruction::SUB;
+		m_context << Instruction::DUP2;
+	}
+
+	// CALL arguments: outSize, outOff, inSize, inOff (already present up to here)
+	// [value,] addr, gas (stack top)
+	if (isDelegateCall)
+		solAssert(!_functionType.valueSet(), "Value set for delegatecall");
+	else if (useStaticCall)
+		solAssert(!_functionType.valueSet(), "Value set for staticcall");
+	else if (_functionType.valueSet())
+		m_context << dupInstruction(m_context.baseToCurrentStackOffset(valueStackPos));
+	else
+		m_context << u256(0);
+	m_context << dupInstruction(m_context.baseToCurrentStackOffset(contractStackPos));
+
+	bool existenceChecked = false;
+	// Check the target contract exists (has code) for non-low-level calls.
+	if (funKind == FunctionType::Kind::External || funKind == FunctionType::Kind::DelegateCall)
+	{
+		size_t encodedHeadSize = 0;
+		for (auto const& t: returnTypes)
+			encodedHeadSize += t->decodingType()->calldataHeadSize();
+		// We do not need to check extcodesize if we expect return data, since if there is no
+		// code, the call will return empty data and the ABI decoder will revert.
+		if (
+			encodedHeadSize == 0 ||
+			!haveReturndatacopy ||
+			m_context.revertStrings() >= RevertStrings::Debug
+		)
+		{
+			m_context << Instruction::DUP1 << Instruction::EXTCODESIZE << Instruction::ISZERO;
+			m_context.appendConditionalRevert(false, "Target contract does not contain code");
+			existenceChecked = true;
+		}
+	}
+
+	if (_functionType.gasSet())
+		m_context << dupInstruction(m_context.baseToCurrentStackOffset(gasStackPos));
+	else if (m_context.evmVersion().canOverchargeGasForCall())
+		// Send all gas (requires tangerine whistle EVM)
+		m_context << Instruction::GAS;
+	else
+	{
+		// send all gas except the amount needed to execute "SUB" and "CALL"
+		// @todo this retains too much gas for now, needs to be fine-tuned.
+		u256 gasNeededByCaller = evmasm::GasCosts::callGas(m_context.evmVersion()) + 10;
+		if (_functionType.valueSet())
+			gasNeededByCaller += evmasm::GasCosts::callValueTransferGas;
+		if (!existenceChecked)
+			gasNeededByCaller += evmasm::GasCosts::callNewAccountGas; // we never know
+		m_context << gasNeededByCaller << Instruction::GAS << Instruction::SUB;
+	}
+	// Order is important here, STATICCALL might overlap with DELEGATECALL.
+	if (isDelegateCall)
+		m_context << Instruction::DELEGATECALL;
+	else if (useStaticCall)
+		m_context << Instruction::STATICCALL;
+	else {
+		m_context << Instruction::XSPAWNCALL;
+
+		m_context << Instruction::ISZERO;
+		//evmasm::AssemblyItem postStopLabel = m_context.pushNewTag();
+		//m_context.appendConditionalJump();
+		evmasm::AssemblyItem postStopLabel = m_context.appendConditionalJump();
+		m_context << Instruction::SPAWNSTOP;
+		m_context << postStopLabel;
+	}
+
+	unsigned remainsSize =
+		2u + // contract address, input_memory_end
+		(_functionType.valueSet() ? 1 : 0) +
+		(_functionType.gasSet() ? 1 : 0) +
+		(!_functionType.isBareCall() ? 1 : 0);
+
+	evmasm::AssemblyItem endTag = m_context.newTag();
+
+	// No success condition on stack
+	//if (!returnSuccessConditionAndReturndata && !_tryCall)
+	//{
+	//	// Propagate error condition (if CALL pushes 0 on stack).
+	//	m_context << Instruction::ISZERO;
+	//	m_context.appendConditionalRevert(true);
+	//}
+	//else
+	//	m_context << swapInstruction(remainsSize);
+	utils().popStackSlots(remainsSize);
+
+	// Only success flag is remaining on stack.
+
+	if (_tryCall)
+	{
+		m_context << Instruction::DUP1 << Instruction::ISZERO;
+		m_context.appendConditionalJumpTo(endTag);
+		m_context << Instruction::POP;
+	}
+
+	if (returnSuccessConditionAndReturndata)
+	{
+		// success condition is already there
+		// The return parameter types can be empty, when this function is used as
+		// an internal helper function e.g. for ``send`` and ``transfer``. In that
+		// case we're only interested in the success condition, not the return data.
+		if (!_functionType.returnParameterTypes().empty())
+			utils().returnDataToArray();
+	}
+	else if (funKind == FunctionType::Kind::RIPEMD160)
+	{
+		// fix: built-in contract returns right-aligned data
+		utils().fetchFreeMemoryPointer();
+		utils().loadFromMemoryDynamic(IntegerType(160), false, true, false);
+		utils().convertType(IntegerType(160), FixedBytesType(20));
+	}
+	else if (funKind == FunctionType::Kind::ECRecover)
+	{
+		// Output is 32 bytes before input / free mem pointer.
+		// Failing ecrecover cannot be detected, so we clear output before the call.
+		m_context << u256(32);
+		utils().fetchFreeMemoryPointer();
+		m_context << Instruction::SUB << Instruction::MLOAD;
+	}
+	else if (!returnTypes.empty())
+	{
+		utils().fetchFreeMemoryPointer();
+		// Stack: return_data_start
+
+		// The old decoder did not allocate any memory (i.e. did not touch the free
+		// memory pointer), but kept references to the return data for
+		// (statically-sized) arrays
+		bool needToUpdateFreeMemoryPtr = false;
+		if (dynamicReturnSize || m_context.useABICoderV2())
+			needToUpdateFreeMemoryPtr = true;
+		else
+			for (auto const& retType: returnTypes)
+				if (dynamic_cast<ReferenceType const*>(retType))
+					needToUpdateFreeMemoryPtr = true;
+
+		// Stack: return_data_start
+		if (dynamicReturnSize)
+		{
+			solAssert(haveReturndatacopy, "");
+			m_context.appendInlineAssembly("{ returndatacopy(return_data_start, 0, returndatasize()) }", {"return_data_start"});
+		}
+		else
+			solAssert(retSize > 0, "");
+		// Always use the actual return length, and not our calculated expected length, if returndatacopy is supported.
+		// This ensures it can catch badly formatted input from external calls.
+		m_context << (haveReturndatacopy ? evmasm::AssemblyItem(Instruction::RETURNDATASIZE) : u256(retSize));
+		// Stack: return_data_start return_data_size
+		if (needToUpdateFreeMemoryPtr)
+			m_context.appendInlineAssembly(R"({
+				// round size to the next multiple of 32
+				let newMem := add(start, and(add(size, 0x1f), not(0x1f)))
+				mstore(0x40, newMem)
+			})", {"start", "size"});
+
+		utils().abiDecode(returnTypes, true);
+	}
+
+	if (_tryCall)
+	{
+		// Success branch will reach this, failure branch will directly jump to endTag.
+		m_context << u256(1);
+		m_context << endTag;
+	}
+    //TODO: Figure out what is and isnt needed from appendExternalFunctionCall stuff?
+}
+
 
 void ExpressionCompiler::appendExternalFunctionCall(
 	FunctionType const& _functionType,

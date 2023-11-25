@@ -138,6 +138,7 @@ private:
 	ASTPointer<EmitStatement> parseEmitStatement(ASTPointer<ASTString> const& docString);
 	ASTPointer<SpawnStatement> parseSpawnStatement(ASTPointer<ASTString> const& docString);
 	ASTPointer<XSpawnStatement> parseXSpawnStatement(ASTPointer<ASTString> const& docString);
+	ASTPointer<XSpawnCallStatement> parseXSpawnCallStatement(ASTPointer<ASTString> const& docString);
 	ASTPointer<RevertStatement> parseRevertStatement(ASTPointer<ASTString> const& docString);
 	/// A "simple statement" can be a variable declaration statement or an expression statement.
 	ASTPointer<Statement> parseSimpleStatement(ASTPointer<ASTString> const& _docString);

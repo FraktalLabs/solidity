@@ -2723,14 +2723,12 @@ void TypeChecker::typeCheckFunctionGeneralChecks(
 	}
 }
 
-//TODO: Make it like a function call ( use spawn statement and spawn call for now )
 bool TypeChecker::visit(SpawnCall const& _spawnCall)
 {
 	// Use spawn call as a function call to visit function call
 	return this->visit(dynamic_cast<FunctionCall const&>(_spawnCall));
 }
 
-// TODO: Fuse with spawncall
 bool TypeChecker::visit(XSpawnCall const& _xspawnCall)
 {
 	// Use xspawn call as a function call to visit function call

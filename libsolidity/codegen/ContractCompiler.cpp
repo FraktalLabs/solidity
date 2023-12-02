@@ -1396,7 +1396,6 @@ bool ContractCompiler::visit(VariableDeclarationStatement const& _variableDeclar
 	return false;
 }
 
-//TODO
 bool ContractCompiler::visit(ChannelReceiveStatement const& _channelReceiveStatement)
 {
 	CompilerContext::LocationSetter locationSetter(m_context, _channelReceiveStatement);

@@ -1,0 +1,14 @@
+Critical TODOs
+--------------
+Ensure all compile options / paths work : asm, via-ir, bin, ...
+Gas & Side effects setup properly for all ops ( Instructions.cpp )
+SolAsserts() setup everywhere for type checking, ...
+
+Misc TODO
+---------
+Combine XSpawnCall & SpawnCall ?
+Move m_assembly setup from operator to generate code ?
+
+Tests
+------
+AST JSON setup test
